@@ -59,7 +59,7 @@ const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose }) => 
             ...values,
             status: IssueStatus.BACKLOG,
             project: project._id,
-            users: values.userIds.map(_id => ({ _id })),
+            users: [{ _id: values.userIds }],
           });
           await fetchProject();
           toast.success('Issue has been successfully created.');
@@ -98,7 +98,6 @@ const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose }) => 
           renderValue={renderUser(project)}
         />
         <Form.Field.Select
-          isMulti
           name="userIds"
           label="Assignees"
           tio="People who are responsible for dealing with this issue."

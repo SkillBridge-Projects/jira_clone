@@ -18,29 +18,26 @@ import {
 
 const propTypes = {
   projects: PropTypes.array.isRequired,
-  project: PropTypes.object.isRequired,
   fetchProject: PropTypes.func.isRequired,
   onCreate: PropTypes.func.isRequired,
   modalClose: PropTypes.func.isRequired,
 };
 
 const renderOption = ({ value, removeOptionValue }) => {
-  
-    return (
-      <SelectItem
-        key={value}
-        withBottomMargin={!!removeOptionValue}
-        onClick={() => removeOptionValue && removeOptionValue()}
-      >
-        <SelectItemLabel>{value.toString()}</SelectItemLabel>
-        {removeOptionValue && <Icon type="close" top={2} />}
-      </SelectItem>
-    );
-  };
+  return (
+    <SelectItem
+      key={value}
+      withBottomMargin={!!removeOptionValue}
+      onClick={() => removeOptionValue && removeOptionValue()}
+    >
+      <SelectItemLabel>{value.toString()}</SelectItemLabel>
+      {removeOptionValue && <Icon type="close" top={2} />}
+    </SelectItem>
+  );
+};
 
-const UserCreate = ({ projects, project, fetchProject, onCreate, modalClose }) => {
+const UserCreate = ({ projects, fetchProject, onCreate, modalClose }) => {
   const [{ isCreating }, createUser] = useApi.post(`/user/create`);
-
 
   return (
     <Form
@@ -58,13 +55,15 @@ const UserCreate = ({ projects, project, fetchProject, onCreate, modalClose }) =
         email: [Form.is.required(), Form.is.email()],
         project: [Form.is.required()],
         password: Form.is.required(),
-        confirmPassword: [Form.is.required(), Form.is.match((value, fieldvalues) => {
-            return value === fieldvalues.password
-        }, "Confirm Password Should Match With Password")],
+        confirmPassword: [
+          Form.is.required(),
+          Form.is.match((value, fieldvalues) => {
+            return value === fieldvalues.password;
+          }, 'Confirm Password Should Match With Password'),
+        ],
       }}
       onSubmit={async (values, form) => {
         try {
-            console.log(values, form)
           await createUser({
             ...values,
           });
@@ -79,27 +78,22 @@ const UserCreate = ({ projects, project, fetchProject, onCreate, modalClose }) =
       <FormElement>
         <FormHeading>Create User</FormHeading>
         <Divider />
-        <Form.Field.Input
-          name="name"
-          label="Enter Name"
-          placeholder="Enter Your Name"
-        />
-        <Form.Field.Input
-          name="email"
-          label="Enter Email"
-          placeholder="Enter Your Email"
-        />
+        <Form.Field.Input name="name" label="Enter Name" placeholder="Enter Your Name" />
+        <Form.Field.Input name="email" label="Enter Email" placeholder="Enter Your Email" />
         <Form.Field.Select
           name="isAdmin"
           label="Is Admin"
-          options={[{value: true, label: true}, {value: false, label: false}]}
+          options={[
+            { value: true, label: true },
+            { value: false, label: false },
+          ]}
           renderOption={renderOption}
           renderValue={renderOption}
         />
         <Form.Field.Select
           name="project"
           label="Project"
-          options={projects.map(proj => ({value: proj.name, label: proj._id}))}
+          options={projects.map(proj => ({ value: proj.name, label: proj._id }))}
           renderOption={renderOption}
           renderValue={renderOption}
         />

@@ -34,4 +34,6 @@ export const attachPrivateRoutes = (app: any): void => {
   app.get('/currentUser', users.getCurrentUser);
   app.get('/users', users.getAllUsers);
   app.delete('/users/:userId', users.deleteUser);
+  // Updated route
+  app.patch('/users/:userId', users.editUser);
 };

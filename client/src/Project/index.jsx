@@ -19,7 +19,6 @@ import Board from './Board';
 import ProjectSettings from './ProjectSettings';
 import { ProjectPage } from './Styles';
 
-
 const Project = () => {
   const match = useRouteMatch();
   const history = useHistory();
@@ -35,7 +34,8 @@ const Project = () => {
   useEffect(() => {
     const projects = data && data.projects;
     if (currentProject) {
-      const findCurrentProject = projects && projects.find(project => currentProject._id === project._id)
+      const findCurrentProject =
+        projects && projects.find(project => currentProject._id === project._id);
       if (findCurrentProject) {
         setCurrentProject(findCurrentProject);
       }
@@ -45,7 +45,7 @@ const Project = () => {
     if (firstProject) {
       setCurrentProject(firstProject);
     }
-  }, [currentProject, data])
+  }, [currentProject, data]);
 
   if (!data) return <PageLoader />;
   if (error) return <PageError />;
@@ -55,12 +55,12 @@ const Project = () => {
   const updateLocalProjectIssues = (issueId, updatedFields) => {
     setLocalData(currentData => ({
       projects: [
-        ...currentData.projects.map((project) => ({
+        ...currentData.projects.map(project => ({
           ...project,
-          issues: updateArrayItemById(project.issues, issueId, updatedFields)
-        }))
-      ]
-    }))
+          issues: updateArrayItemById(project.issues, issueId, updatedFields),
+        })),
+      ],
+    }));
   };
 
   return (
@@ -84,41 +84,45 @@ const Project = () => {
       )}
 
       {userCreateModalHelpers.isOpen() && (
-          <Modal
-            isOpen
-            testid="modal:user-create"
-            width={800}
-            withCloseIcon={false}
-            onClose={userCreateModalHelpers.close}
-            renderContent={modal => (
-              <UserCreate
-                projects={projects}
-                project={currentProject}
-                fetchProject={fetchProject}
-                onCreate={() => history.push(`${match.url}/board`)}
-                modalClose={modal.close}
-              />
-            )}
+        <Modal
+          isOpen
+          testid="modal:user-create"
+          width={800}
+          withCloseIcon={false}
+          onClose={userCreateModalHelpers.close}
+          renderContent={modal => (
+            <UserCreate
+              projects={projects}
+              project={currentProject}
+              fetchProject={fetchProject}
+              onCreate={() => history.push(`${match.url}/board`)}
+              modalClose={modal.close}
+            />
+          )}
         />
       )}
 
       {projectCreateModalHelpers.isOpen() && (
-          <Modal
-            isOpen
-            testid="modal:project-create"
-            width={800}
-            withCloseIcon={false}
-            onClose={projectCreateModalHelpers.close}
-            renderContent={() => (
-              <ProjectCreate
-                onCreate={() => fetchProject()}
-                modalClose={projectCreateModalHelpers.close}
-              />
-            )}
+        <Modal
+          isOpen
+          testid="modal:project-create"
+          width={800}
+          withCloseIcon={false}
+          onClose={projectCreateModalHelpers.close}
+          renderContent={() => (
+            <ProjectCreate
+              onCreate={() => fetchProject()}
+              modalClose={projectCreateModalHelpers.close}
+            />
+          )}
         />
       )}
 
-      <Sidebar currentProject={currentProject} projects={projects} setCurrentProject={setCurrentProject} />
+      <Sidebar
+        currentProject={currentProject}
+        projects={projects}
+        setCurrentProject={setCurrentProject}
+      />
 
       {currentProject && (
         <Route
@@ -143,14 +147,11 @@ const Project = () => {
       {currentUser && currentUser.isAdmin && (
         <Route
           path={`${match.path}/users`}
-          render={() => <Users fetchProject={fetchProject} />}
+          render={() => <Users fetchProject={fetchProject} projectsData={projects} />}
         />
       )}
 
-      <Route
-        path={`${match.path}/pages`}
-        render={() => <Pages />}
-      />
+      <Route path={`${match.path}/pages`} render={() => <Pages />} />
 
       {match.isExact && <Redirect to={`${match.url}/board`} />}
     </ProjectPage>

@@ -82,3 +82,34 @@ export const login = catchErrors(async (req, res) => {
 export const getCurrentUser = catchErrors((req, res) => {
   res.respond({ currentUser: req.currentUser });
 });
+
+// Updated code
+
+export const editUser = catchErrors(async (req, res) => {
+  const { userId } = req.params;
+  const updates = req.body;
+
+  if (!userId) {
+    throw new CustomError('User ID not provided');
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new BadUserInputError({ userId: 'User not found' });
+  }
+
+  // Update fields that are allowed to be edited
+  if (updates.name) user.name = updates.name;
+  if (updates.isAdmin) user.isAdmin = updates.isAdmin;
+  // Update project if provided
+  if (updates.project) {
+    const project = await Project.findOne({ _id: updates.project });
+    if (!project) {
+      throw new BadUserInputError({ project: 'Project not found' });
+    }
+    user.project = project._id;
+  }
+
+  await user.save();
+  res.respond({ user });
+});
