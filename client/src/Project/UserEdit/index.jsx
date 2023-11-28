@@ -24,7 +24,6 @@ const UserEdit = ({ user, projects, onSave, modalClose }) => {
       }}
       onSubmit={async (values, form) => {
         try {
-          console.log(values);
           await updateUser(values);
           toast.success(`User ${values.name} has been successfully updated.`);
           onSave();

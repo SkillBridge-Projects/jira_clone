@@ -100,7 +100,8 @@ export const editUser = catchErrors(async (req, res) => {
 
   // Update fields that are allowed to be edited
   if (updates.name) user.name = updates.name;
-  if (updates.isAdmin) user.isAdmin = updates.isAdmin;
+  user.isAdmin = updates.isAdmin ?? user.isAdmin;
+
   // Update project if provided
   if (updates.project) {
     const project = await Project.findOne({ _id: updates.project });
