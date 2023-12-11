@@ -25,7 +25,7 @@ const ProjectBoardIssueDetailsAssigneesReporter = ({ issue, updateIssue, project
         dropdownWidth={343}
         placeholder="Unassigned"
         name="assignees"
-        value={issue.users[0]._id}
+        value={issue.users[0] && issue.users[0]._id}
         options={userOptions}
         onChange={userId => {
           updateIssue({ userIds: [userId], users: [getUserById(userId)] });

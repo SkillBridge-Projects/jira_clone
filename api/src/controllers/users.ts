@@ -103,13 +103,14 @@ export const editUser = catchErrors(async (req, res) => {
   user.isAdmin = updates.isAdmin ?? user.isAdmin;
 
   // Update project if provided
-  if (updates.project) {
-    const project = await Project.findOne({ _id: updates.project });
-    if (!project) {
-      throw new BadUserInputError({ project: 'Project not found' });
-    }
-    user.project = project._id;
-  }
+  // Will check while updating changeProject functionality
+  // if (updates.project) {
+  //   const project = await Project.findOne({ _id: updates.project });
+  //   if (!project) {
+  //     throw new BadUserInputError({ project: 'Project not found' });
+  //   }
+  //   user.project = project._id;
+  // }
 
   await user.save();
   res.respond({ user });

@@ -4,11 +4,15 @@ import React from 'react';
 import toast from 'shared/utils/toast';
 import useApi from 'shared/hooks/api';
 import { Form } from 'shared/components';
+import useCurrentUser from 'shared/hooks/currentUser';
 
 import { FormHeading, FormElement, Divider, Actions, ActionButton } from './Stlyes';
 
+
+
 const UserEdit = ({ user, projects, onSave, modalClose }) => {
   const [{ isUpdating }, updateUser] = useApi.patch(`/users/${user._id}`);
+  const { currentUser } = useCurrentUser();
 
   return (
     <Form
@@ -16,7 +20,7 @@ const UserEdit = ({ user, projects, onSave, modalClose }) => {
       initialValues={{
         name: user.name,
         isAdmin: user.isAdmin,
-        project: user.project._id,
+        // project: user.project._id,
       }}
       validations={{
         name: Form.is.required(),
@@ -36,19 +40,21 @@ const UserEdit = ({ user, projects, onSave, modalClose }) => {
         <FormHeading>Edit User</FormHeading>
         <Divider />
         <Form.Field.Input name="name" label="Name" placeholder="Enter User's Name" />
-        <Form.Field.Select
+        {currentUser._id !== user._id && <Form.Field.Select
           name="isAdmin"
           label="Is Admin"
           options={[
             { value: true, label: 'True' },
             { value: false, label: 'False' },
           ]}
-        />
-        <Form.Field.Select
+          />
+        }
+        {/* <Form.Field.Select
           name="project"
           label="Project"
           options={projects.map(proj => ({ value: proj._id, label: proj.name }))}
-        />
+        /> */}
+        {/* Will Check while Creating multiProject functionality */}
         <Actions>
           <ActionButton type="submit" variant="primary" isWorking={isUpdating}>
             Update User
