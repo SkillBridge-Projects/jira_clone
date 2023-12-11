@@ -83,8 +83,6 @@ export const getCurrentUser = catchErrors((req, res) => {
   res.respond({ currentUser: req.currentUser });
 });
 
-// Updated code
-
 export const editUser = catchErrors(async (req, res) => {
   const { userId } = req.params;
   const updates = req.body;
