@@ -22,6 +22,7 @@ const Avatar = ({ className, avatarUrl, name, size, ...otherProps }) => {
     className,
     size,
     'data-testid': name ? `avatar:${name}` : 'avatar',
+    title: name || '',
     ...otherProps,
   };
 
