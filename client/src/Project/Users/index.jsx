@@ -89,7 +89,7 @@ function Users({ fetchProject, projects }) {
             >
               Edit
             </ActionButton>
-            {currentUser && currentUser.isAdmin && currentUser._id !== user._id && (
+            {/* {currentUser && currentUser.isAdmin && currentUser._id !== user._id && (
               <ActionButton
                 variant="danger"
                 onClick={() => {
@@ -101,7 +101,7 @@ function Users({ fetchProject, projects }) {
               >
                 Delete
               </ActionButton>
-            )}
+            )} */}
           </div>
         </div>
       ))}

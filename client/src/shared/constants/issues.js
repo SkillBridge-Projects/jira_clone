@@ -8,6 +8,7 @@ export const IssueStatus = {
   BACKLOG: 'backlog',
   SELECTED: 'selected',
   INPROGRESS: 'inprogress',
+  READYFORTESTING: 'readyfortesting',
   DONE: 'done',
 };
 
@@ -29,6 +30,7 @@ export const IssueStatusCopy = {
   [IssueStatus.BACKLOG]: 'Backlog',
   [IssueStatus.SELECTED]: 'Selected for development',
   [IssueStatus.INPROGRESS]: 'In progress',
+  [IssueStatus.READYFORTESTING]: 'Ready for Testing / Review',
   [IssueStatus.DONE]: 'Done',
 };
 
