@@ -20,7 +20,22 @@ async function updateUserInProjects(
   userId: mongoose.Types.ObjectId,
 ): Promise<void> {
   for (const project of projects) {
-    project.users.push(userId);
+    if (!project.users.includes(userId)) {
+      project.users.push(userId);
+    }
+    await project.save();
+  }
+}
+
+async function deleteUserInProjects(
+  projects: IProject[],
+  userId: mongoose.Types.ObjectId,
+): Promise<void> {
+  for (const project of projects) {
+    if (project.users.includes(userId)) {
+      const userIndex = project.users.findIndex(user => user === userId);
+      project.users.splice(userIndex, 1);
+    }
     await project.save();
   }
 }
@@ -105,31 +120,51 @@ export const getCurrentUser = catchErrors((req, res) => {
 
 export const editUser = catchErrors(async (req, res) => {
   const { userId } = req.params;
-  const updates = req.body;
-
   if (!userId) {
-    throw new CustomError('User ID not provided');
+    throw new CustomError('Please Provide User Id');
   }
-
-  const user = await User.findById(userId);
+  const user = await User.findById(userId, '-password');
   if (!user) {
-    throw new BadUserInputError({ userId: 'User not found' });
+    throw new CustomError('User not found');
   }
 
-  // Update fields that are allowed to be edited
-  if (updates.name) user.name = updates.name;
-  user.isAdmin = updates.isAdmin ?? user.isAdmin;
+  Object.keys(req.body).forEach(key => {
+    (user as any)[key] = req.body[key];
+  });
 
-  // Update project if provided
-  // Will check while updating changeProject functionality
-  // if (updates.project) {
-  //   const project = await Project.findOne({ _id: updates.project });
-  //   if (!project) {
-  //     throw new BadUserInputError({ project: 'Project not found' });
-  //   }
-  //   user.project = project._id;
-  // }
+  const body = {
+    ...req.body,
+  };
+
+  const projectNames = body.projects;
+  if (!projectNames) {
+    throw new BadUserInputError({ project: 'Project not provided' });
+  }
+  const projects = await Project.find({ name: { $in: projectNames } });
+  const foundProjectNames = projects.map(project => project.name);
+
+  // Check if all requested projects are found
+  const missingProjects = projectNames.filter((name: string) => !foundProjectNames.includes(name));
+
+  if (missingProjects.length > 0) {
+    // Throw an error for missing projects
+    throw new CustomError(
+      `The following projects are not available: ${missingProjects.join(', ')}`,
+    );
+  }
+
+  user.projects = projects.map(project => project._id);
+
+  updateUserInProjects(projects, user._id);
+
+  const userInProjects = (await Project.find({ users: userId })).filter(
+    proj => !user.projects.includes(proj._id),
+  );
+
+  deleteUserInProjects(userInProjects, user._id);
 
   await user.save();
-  res.respond({ user });
+  res.send({
+    user,
+  });
 });
