@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Route, Redirect, useRouteMatch, useHistory } from 'react-router-dom';
 
 import useApi from 'shared/hooks/api';
@@ -24,7 +24,7 @@ const Project = () => {
   const history = useHistory();
   const { currentUser } = useCurrentUser();
   const [currentProject, setCurrentProject] = useState();
-
+  const boardRef = useRef();
   const issueSearchModalHelpers = createQueryParamModalHelpers('issue-search');
   const userCreateModalHelpers = createQueryParamModalHelpers('user-create');
   const projectCreateModalHelpers = createQueryParamModalHelpers('project-create');

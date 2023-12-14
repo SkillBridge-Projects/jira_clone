@@ -81,7 +81,7 @@ const ProjectBoard = forwardRef(({ currentProject, fetchProject, issueCreateModa
         <div style={{display: 'flex', alignItems: 'center'}}>
           <Breadcrumbs items={['Projects', project.name, 'Kanban Board']} />
           <ActionButton type="button" variant="primary" onClick={issueCreateModalHelpers.open} >
-            Create Issue
+            Create
           </ActionButton>
         </div>
         <div>
