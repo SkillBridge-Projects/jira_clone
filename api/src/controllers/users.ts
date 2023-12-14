@@ -43,7 +43,7 @@ async function deleteUserInProjects(
 export const getAllUsers = catchErrors(async (req, res) => {
   let users = await User.find({}, '-password').populate('projects');
   if (req.query.projectId) {
-    users = users.filter(user => user.project.includes(req.query.projectId));
+    users = users.filter(user => user.projects.includes(req.query.projectId));
   }
   res.respond(users);
 });
@@ -71,8 +71,8 @@ export const create = catchErrors(async (req, res) => {
     ...req.body,
     password,
   };
-  const projectName = body.projects;
-  if (!projectName) {
+  const projectNames = body.projects;
+  if (!projectNames) {
     throw new BadUserInputError({ project: 'Project not provided' });
   }
 
@@ -87,7 +87,6 @@ export const create = catchErrors(async (req, res) => {
     throw new CustomError(
       `The following projects are not available: ${missingProjects.join(', ')}`,
     );
-
   }
   body.projects = projects.map(project => project._id);
   const user = new User(body);

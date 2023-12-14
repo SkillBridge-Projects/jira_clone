@@ -6,6 +6,7 @@ import toast from 'shared/utils/toast';
 import useApi from 'shared/hooks/api';
 import { Form, Icon } from 'shared/components';
 
+import useCurrentUser from 'shared/hooks/currentUser';
 import {
   FormHeading,
   FormElement,
@@ -14,8 +15,7 @@ import {
   Divider,
   Actions,
   ActionButton,
-} from './Styles';
-import useCurrentUser from 'shared/hooks/currentUser';
+} from './Stlyes';
 
 const propTypes = {
   fetchProject: PropTypes.func.isRequired,
@@ -24,18 +24,17 @@ const propTypes = {
 };
 
 const renderOption = ({ value, removeOptionValue }) => {
-  
-    return (
-      <SelectItem
-        key={value}
-        withBottomMargin={!!removeOptionValue}
-        onClick={() => removeOptionValue && removeOptionValue()}
-      >
-        <SelectItemLabel>{value.toString()}</SelectItemLabel>
-        {removeOptionValue && <Icon type="close" top={2} />}
-      </SelectItem>
-    );
-  };
+  return (
+    <SelectItem
+      key={value}
+      withBottomMargin={!!removeOptionValue}
+      onClick={() => removeOptionValue && removeOptionValue()}
+    >
+      <SelectItemLabel>{value.toString()}</SelectItemLabel>
+      {removeOptionValue && <Icon type="close" top={2} />}
+    </SelectItem>
+  );
+};
 
 const UserEdit = ({ user, allProjects, fetchProject, onEdit, modalClose }) => {
   const [{ isCreating }, editUser] = useApi.patch(`/users/${user._id}`);
@@ -58,13 +57,13 @@ const UserEdit = ({ user, allProjects, fetchProject, onEdit, modalClose }) => {
       }}
       onSubmit={async (values, form) => {
         try {
-            console.log(values, form)
-            await editUser({
-              ...values,
-            });
-            await fetchProject();
-            toast.success(`User ${values.name} has been successfully created.`);
-            onEdit();
+          console.log(values, form);
+          await editUser({
+            ...values,
+          });
+          await fetchProject();
+          toast.success(`User ${values.name} has been successfully created.`);
+          onEdit();
         } catch (error) {
           Form.handleAPIError(error, form);
         }
@@ -73,11 +72,7 @@ const UserEdit = ({ user, allProjects, fetchProject, onEdit, modalClose }) => {
       <FormElement>
         <FormHeading>Edit User</FormHeading>
         <Divider />
-        <Form.Field.Input
-          name="name"
-          label="Enter Name"
-          placeholder="Enter Your Name"
-        />
+        <Form.Field.Input name="name" label="Enter Name" placeholder="Enter Your Name" />
         <Form.Field.Input
           disabled
           name="email"
@@ -88,7 +83,10 @@ const UserEdit = ({ user, allProjects, fetchProject, onEdit, modalClose }) => {
           <Form.Field.Select
             name="isAdmin"
             label="Is Admin"
-            options={[{value: true, label: true}, {value: false, label: false}]}
+            options={[
+              { value: true, label: true },
+              { value: false, label: false },
+            ]}
             renderOption={renderOption}
             renderValue={renderOption}
           />
@@ -97,7 +95,7 @@ const UserEdit = ({ user, allProjects, fetchProject, onEdit, modalClose }) => {
           name="projects"
           label="Projects"
           isMulti
-          options={allProjects.map(proj => ({value: proj.name, label: proj._id}))}
+          options={allProjects.map(proj => ({ value: proj.name, label: proj._id }))}
           renderOption={renderOption}
           renderValue={renderOption}
         />

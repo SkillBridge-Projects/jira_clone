@@ -11,7 +11,7 @@ export interface IUser extends Document {
   updatedAt: Date;
   comments: mongoose.Types.ObjectId[];
   issues: mongoose.Types.ObjectId[];
-  projects: mongoose.Types.ObjectId;
+  projects: mongoose.Types.ObjectId[];
 }
 
 const UserSchema: Schema = new Schema(
