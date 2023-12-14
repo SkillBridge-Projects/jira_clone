@@ -32,7 +32,12 @@ function Users({ fetchProject, projectsData }) {
       toast.error(localError);
     }
   };
-
+  const getProjectsNames = (projects) => {
+    if (projects && projects.length > 0) {
+      return projects.map(project => project.name).join(', ');
+    }
+    return 'unassigned';
+  }
   if (editingUser) {
     return (
       <UserEdit
@@ -79,6 +84,10 @@ function Users({ fetchProject, projectsData }) {
               <div>
                 <b>IsAdmin: </b>
                 <span>{user.isAdmin.toString()}</span>
+              </div>
+              <div>
+                <b>Projects Assigned: </b>
+                <span>{getProjectsNames(user.projects)}</span>
               </div>
             </div>
           </div>

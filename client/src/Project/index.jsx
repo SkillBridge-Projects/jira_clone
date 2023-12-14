@@ -94,7 +94,12 @@ const Project = () => {
             <UserCreate
               projects={projects}
               project={currentProject}
-              fetchProject={fetchProject}
+              fetchProject={(...args) => {
+                if (boardRef.current.fetchCurrentProject) {
+                  boardRef.current.fetchCurrentProject();
+                }
+                fetchProject(...args)
+              }}
               onCreate={() => history.push(`${match.url}/board`)}
               modalClose={modal.close}
             />
@@ -129,6 +134,7 @@ const Project = () => {
           path={`${match.path}/board`}
           render={() => (
             <Board
+              ref={boardRef}
               currentProject={currentProject}
               fetchProject={fetchProject}
               updateLocalProjectIssues={updateLocalProjectIssues}

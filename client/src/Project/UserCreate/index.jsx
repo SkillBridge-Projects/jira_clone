@@ -46,14 +46,14 @@ const UserCreate = ({ projects, fetchProject, onCreate, modalClose }) => {
         name: '',
         email: '',
         isAdmin: false,
-        project: '',
+        projects: '',
         password: '',
         confirmPassword: '',
       }}
       validations={{
         name: Form.is.required(),
         email: [Form.is.required(), Form.is.email()],
-        project: [Form.is.required()],
+        projects: [Form.is.required()],
         password: Form.is.required(),
         confirmPassword: [
           Form.is.required(),
@@ -91,8 +91,8 @@ const UserCreate = ({ projects, fetchProject, onCreate, modalClose }) => {
           renderValue={renderOption}
         />
         <Form.Field.Select
-          name="project"
-          label="Project"
+          name="projects"
+          label="Projects"
           options={projects.map(proj => ({ value: proj.name, label: proj._id }))}
           renderOption={renderOption}
           renderValue={renderOption}
