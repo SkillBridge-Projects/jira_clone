@@ -26,7 +26,6 @@ const initializeExpress = (): void => {
   app.use(cors({ origin: '*', methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'] }));
   app.use(express.json());
   app.use(express.urlencoded());
-
   app.use(addRespondToResponse);
 
   attachPublicRoutes(app);

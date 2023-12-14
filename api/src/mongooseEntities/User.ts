@@ -11,7 +11,7 @@ export interface IUser extends Document {
   updatedAt: Date;
   comments: mongoose.Types.ObjectId[];
   issues: mongoose.Types.ObjectId[];
-  project: mongoose.Types.ObjectId;
+  projects: mongoose.Types.ObjectId[];
 }
 
 const UserSchema: Schema = new Schema(
@@ -53,10 +53,12 @@ const UserSchema: Schema = new Schema(
         ref: 'Issue',
       },
     ],
-    project: {
-      type: mongoose.Types.ObjectId,
-      ref: 'Project',
-    },
+    projects: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Project',
+      },
+    ],
   },
   {
     timestamps: true,

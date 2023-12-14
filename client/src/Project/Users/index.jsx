@@ -1,23 +1,25 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-alert */
 /* eslint-disable no-underscore-dangle */
-import React from 'react';
-import { Avatar, PageError, PageLoader } from 'shared/components';
+import React, { useState } from 'react'
+import { Avatar, ConfirmModal, Modal, PageError, PageLoader } from 'shared/components';
+import { createQueryParamModalHelpers } from 'shared/utils/queryParamModal';
 import useApi from 'shared/hooks/api';
 import useCurrentUser from 'shared/hooks/currentUser';
 import api from 'shared/utils/api';
 import toast from 'shared/utils/toast';
 import { ActionButton } from 'Project/UserCreate/Styles';
-import UserEdit from '../UserEdit/index'; // Import UserEdit component
+import UserEdit from 'Project/UserEdit';
 
-function Users({ fetchProject, projectsData }) {
+function Users({ fetchProject, projects }) {
   const [{ data, error }, fetchUsers] = useApi.get('/users');
   const { currentUser } = useCurrentUser();
 
-  const [editingUser, setEditingUser] = React.useState(null); // State to manage editing user
+  const [editingUser, setEditingUser] = useState();
+  const editUserModalHelpers = createQueryParamModalHelpers('edit-user');
 
   const handleEditUser = user => {
-    setEditingUser(user); // Set the selected user for editing
+    setEditingUser(user);
   };
 
   const handleDeleteUser = async (user, modal) => {
@@ -32,19 +34,11 @@ function Users({ fetchProject, projectsData }) {
       toast.error(localError);
     }
   };
-
-  if (editingUser) {
-    return (
-      <UserEdit
-        user={editingUser} // Pass the user data to UserEdit
-        projects={projectsData} // {data && data.projects}
-        onSave={async () => {
-          setEditingUser(null);
-          await fetchUsers();
-        }}
-        modalClose={() => setEditingUser(null)}
-      />
-    );
+  const getProjectsNames = (projects) => {
+    if (projects && projects.length > 0) {
+      return projects.map(project => project.name).join(', ');
+    }
+    return 'unassigned';
   }
 
   if (!data) return <PageLoader />;
@@ -80,10 +74,19 @@ function Users({ fetchProject, projectsData }) {
                 <b>IsAdmin: </b>
                 <span>{user.isAdmin.toString()}</span>
               </div>
+              <div>
+                <b>Projects Assigned: </b>
+                <span>{getProjectsNames(user.projects)}</span>
+              </div>
             </div>
           </div>
           <div>
-            <ActionButton variant="primary" onClick={() => handleEditUser(user)}>
+            <ActionButton variant="primary"
+              onClick={() => {
+                setEditingUser(user);
+                editUserModalHelpers.open();
+              }}
+            >
               Edit
             </ActionButton>
             {currentUser && currentUser.isAdmin && currentUser._id !== user._id && (
@@ -102,6 +105,18 @@ function Users({ fetchProject, projectsData }) {
           </div>
         </div>
       ))}
+            {editingUser && editUserModalHelpers.isOpen() && (
+        <Modal
+          isOpen
+          testid="modal:edit-user"
+          width={600}
+          onClose={() => {
+            setEditingUser(null);
+            editUserModalHelpers.close();
+          }}
+          renderContent={(modal) => <UserEdit allProjects={projects} user={editingUser} modalClose={modal.close} fetchProject={fetchProject} onEdit={editUserModalHelpers.close} />}
+        />
+      )}
     </div>
   );
 }

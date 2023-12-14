@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import toast from 'shared/utils/toast';
 import useApi from 'shared/hooks/api';
@@ -18,8 +19,6 @@ import {
 
 const propTypes = {
   projects: PropTypes.array.isRequired,
-  fetchProject: PropTypes.func.isRequired,
-  onCreate: PropTypes.func.isRequired,
   modalClose: PropTypes.func.isRequired,
 };
 
@@ -36,9 +35,9 @@ const renderOption = ({ value, removeOptionValue }) => {
   );
 };
 
-const UserCreate = ({ projects, fetchProject, onCreate, modalClose }) => {
+const UserCreate = ({ projects, modalClose }) => {
   const [{ isCreating }, createUser] = useApi.post(`/user/create`);
-
+  const history = useHistory();
   return (
     <Form
       enableReinitialize
@@ -46,14 +45,15 @@ const UserCreate = ({ projects, fetchProject, onCreate, modalClose }) => {
         name: '',
         email: '',
         isAdmin: false,
-        project: '',
+        projects: '',
         password: '',
         confirmPassword: '',
       }}
       validations={{
         name: Form.is.required(),
         email: [Form.is.required(), Form.is.email()],
-        project: [Form.is.required()],
+        isAdmin: [Form.is.required()],
+        projects: [Form.is.required()],
         password: Form.is.required(),
         confirmPassword: [
           Form.is.required(),
@@ -67,9 +67,11 @@ const UserCreate = ({ projects, fetchProject, onCreate, modalClose }) => {
           await createUser({
             ...values,
           });
-          await fetchProject();
+          modalClose();
+          history.go(0);
           toast.success(`User ${values.name} has been successfully created.`);
-          onCreate();
+          // await fetchProject();
+          // onCreate();
         } catch (error) {
           Form.handleAPIError(error, form);
         }
@@ -91,8 +93,9 @@ const UserCreate = ({ projects, fetchProject, onCreate, modalClose }) => {
           renderValue={renderOption}
         />
         <Form.Field.Select
-          name="project"
-          label="Project"
+          name="projects"
+          label="Projects"
+          isMulti
           options={projects.map(proj => ({ value: proj.name, label: proj._id }))}
           renderOption={renderOption}
           renderValue={renderOption}
