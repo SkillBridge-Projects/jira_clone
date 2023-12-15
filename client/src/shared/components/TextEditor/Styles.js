@@ -31,6 +31,7 @@ export const EditorCont = styled.div`
     box-shadow:0 2px 12px 0 rgba(30,30,30,.08);
     overflow: auto;
     width: 270px;
+    max-height: 200px;
     z-index: 9001;
   }
 
