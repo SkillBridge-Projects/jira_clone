@@ -39,11 +39,7 @@ export const EditorCont = styled.div`
     cursor: pointer;
   }
 
-  .ql-mention-list-item:hover {
-    background-color: #d3e1eb;
-  }
-
-  .ql-mention-list-item:focus {
+  .ql-mention-list-item.selected {
     background-color: #d3e1eb;
   }
 `;
