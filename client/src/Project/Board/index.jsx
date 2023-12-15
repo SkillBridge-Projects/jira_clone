@@ -135,6 +135,7 @@ const ProjectBoard = forwardRef(({ currentProject, fetchProject, issueCreateModa
                 fetchProject={fetchCurrentProject}
                 onCreate={() => history.push(`${match.url}/board`)}
                 modalClose={modal.close}
+                projectUsers={project.users}
               />
             )}
           />
