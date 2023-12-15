@@ -35,6 +35,7 @@ const InputDebounced = ({ onChange, value: propsValue, ...inputProps }) => {
     <Input
       {...inputProps}
       value={isControlled ? value : undefined}
+      type="number"
       onChange={newValue => {
         setValue(newValue);
         handleChange(newValue);
