@@ -19,6 +19,7 @@ const ProjectBoardIssueDetailsCommentsBodyForm = ({
   isWorking,
   onSubmit,
   onCancel,
+  projectUsers,
 }) => {
   const $textareaRef = useRef();
 
@@ -35,6 +36,7 @@ const ProjectBoardIssueDetailsCommentsBodyForm = ({
         defaultValue={value}
         onChange={onChange}
         ref={$textareaRef}
+        mentionUsers={projectUsers}
       />
       <Actions>
         <FormButton variant="primary" isWorking={isWorking} onClick={handleSubmit}>

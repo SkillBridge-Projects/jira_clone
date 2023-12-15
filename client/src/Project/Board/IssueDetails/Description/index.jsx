@@ -11,7 +11,7 @@ const propTypes = {
   updateIssue: PropTypes.func.isRequired,
 };
 
-const ProjectBoardIssueDetailsDescription = ({ issue, updateIssue }) => {
+const ProjectBoardIssueDetailsDescription = ({ issue, updateIssue, projectUsers }) => {
   const [description, setDescription] = useState(issue.description);
   const [isEditing, setEditing] = useState(false);
 
@@ -31,6 +31,7 @@ const ProjectBoardIssueDetailsDescription = ({ issue, updateIssue }) => {
             placeholder="Describe the issue"
             defaultValue={description}
             onChange={setDescription}
+            mentionUsers={projectUsers}
           />
           <Actions>
             <Button variant="primary" onClick={handleUpdate}>
