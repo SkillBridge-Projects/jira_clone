@@ -13,7 +13,8 @@ const ProjectBoardIssueDetailsTrackingWidget = ({ issue }) => (
     <WatchIcon type="stopwatch" size={26} top={-1} />
     <Right>
       <BarCont>
-        <Bar width={calculateTrackingBarWidth(issue)} />
+        <Bar width={calculateTrackingBarWidth(issue)} color="blue" />
+        <Bar width={calculateExtraTrackingBarWidth(issue)} color="red" />
       </BarCont>
       <Values>
         <div>{issue.timeSpent ? `${issue.timeSpent}h logged` : 'No time logged'}</div>
@@ -23,22 +24,39 @@ const ProjectBoardIssueDetailsTrackingWidget = ({ issue }) => (
   </TrackingWidget>
 );
 
+const extraTime = ({ timeSpent, estimate }) => {
+  return timeSpent - estimate;
+};
+
 const calculateTrackingBarWidth = ({ timeSpent, timeRemaining, estimate }) => {
-  if (!timeSpent) {
-    return 0;
-  }
-  if (isNil(timeRemaining) && isNil(estimate)) {
-    return 100;
-  }
-  if (!isNil(timeRemaining)) {
-    return (timeSpent / (timeSpent + timeRemaining)) * 100;
-  }
-  if (!isNil(estimate)) {
-    return Math.min((timeSpent / estimate) * 100, 100);
+  if (timeSpent < estimate) {
+    if (!timeSpent) {
+      return 0;
+    }
+    if (isNil(timeRemaining) && isNil(estimate)) {
+      return 100;
+    }
+    if (!isNil(timeRemaining)) {
+      return (timeSpent / (timeSpent + timeRemaining)) * 100;
+    }
+    if (!isNil(estimate)) {
+      return Math.min((timeSpent / estimate) * 100, 100);
+    }
+  } else {
+    return (estimate / (estimate + extraTime({ timeSpent, estimate }))) * 100;
   }
 };
 
-const renderRemainingOrEstimate = ({ timeRemaining, estimate }) => {
+const calculateExtraTrackingBarWidth = ({ timeSpent, estimate }) => {
+  return (
+    (extraTime({ timeSpent, estimate }) / (estimate + extraTime({ timeSpent, estimate }))) * 100
+  );
+};
+
+const renderRemainingOrEstimate = ({ timeSpent, timeRemaining, estimate }) => {
+  if (timeSpent > estimate) {
+    return <div>{`${timeSpent - estimate}h underEstimated`}</div>;
+  }
   if (isNil(timeRemaining) && isNil(estimate)) {
     return null;
   }
