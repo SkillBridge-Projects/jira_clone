@@ -119,6 +119,8 @@ const TextEditor = ({
     insertInitialValue();
     getEditor({ getValue: getHTMLValue });
 
+    quill.setSelection(quill.getLength(),0);
+
     quill.on('text-change', handleContentsChange);
     return () => {
       quill.off('text-change', handleContentsChange);
