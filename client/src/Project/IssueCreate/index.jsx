@@ -31,7 +31,7 @@ const propTypes = {
   modalClose: PropTypes.func.isRequired,
 };
 
-const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose }) => {
+const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose, projectUsers }) => {
   const [{ isCreating }, createIssue] = useApi.post('/issues');
 
   const { currentUserId } = useCurrentUser();
@@ -89,6 +89,7 @@ const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose }) => 
           name="description"
           label="Description"
           tip="Describe the issue in as much detail as you'd like."
+          mentionUsers={projectUsers}
         />
         <Form.Field.Select
           name="reporterId"

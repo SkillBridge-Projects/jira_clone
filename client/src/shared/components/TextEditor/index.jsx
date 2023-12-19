@@ -1,6 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useLayoutEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Quill from 'quill';
+import "quill-mention";
+
 import 'quill/dist/quill.snow.css';
 
 import { EditorCont } from './Styles';
@@ -14,6 +17,7 @@ const propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   getEditor: PropTypes.func,
+  mentionUsers: PropTypes.array
 };
 
 const defaultProps = {
@@ -24,7 +28,56 @@ const defaultProps = {
   value: undefined,
   onChange: () => {},
   getEditor: () => {},
+  mentionUsers: [],
 };
+
+const MentionBlot = Quill.import("blots/mention");
+
+class StyledMentionBlot extends MentionBlot {
+  static render(data) {
+    const element = document.createElement('span');
+    element.innerText = data.value;
+    element.style.color = '#989898';
+    return element;
+  }
+}
+StyledMentionBlot.blotName = "styled-mention";
+
+Quill.register(StyledMentionBlot);
+
+const getMentionModule = (users) => {
+  return {
+    allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+    mentionDenotationChars: ["@"],
+    source(searchTerm, renderList) {
+      const values = users.map(user => ({...user, id: user._id, value: user.name}));
+
+      if (searchTerm.length === 0) {
+        renderList(values, searchTerm);
+      } else {
+        const matches = [];
+        for (let i = 0; i < values.length; i += 1) {
+          if (
+            !values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())
+          ) {
+            matches.push(values[i]);
+          }
+        }
+        renderList(matches, searchTerm);
+      }
+    },
+    renderItem: (data) => {
+      const div = document.createElement("div");
+      div.innerText = data.value;
+      return div;
+    },
+    renderLoading: () => {
+      return "Loading...";
+    },
+    dataAttributes: ['id', 'value', 'denotationChar', 'link', 'target', 'disabled', 'color'],
+    blotName: 'styled-mention',
+  }
+}
 
 const TextEditor = ({
   className,
@@ -37,13 +90,22 @@ const TextEditor = ({
   ignoreCacheDefaultvalue,
   onChange,
   getEditor,
+  mentionUsers,
 }) => {
   const $editorContRef = useRef();
   const $editorRef = useRef();
   const initialValueRef = useRef(defaultValue || alsoDefaultValue || '');
 
   useLayoutEffect(() => {
-    let quill = new Quill($editorRef.current, { placeholder, ...quillConfig });
+    let quill = new Quill($editorRef.current, 
+        { 
+          placeholder, 
+          ...quillConfig, 
+          modules: {
+            ...quillConfig.modules,
+            mention: getMentionModule(mentionUsers),
+          }
+      });
 
     const insertInitialValue = () => {
       quill.clipboard.dangerouslyPasteHTML(0, initialValueRef.current);
@@ -56,6 +118,8 @@ const TextEditor = ({
 
     insertInitialValue();
     getEditor({ getValue: getHTMLValue });
+
+    quill.setSelection(quill.getLength(),0);
 
     quill.on('text-change', handleContentsChange);
     return () => {

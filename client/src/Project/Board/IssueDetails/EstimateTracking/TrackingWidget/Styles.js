@@ -18,6 +18,7 @@ export const Right = styled.div`
 `;
 
 export const BarCont = styled.div`
+  display: flex;
   height: 5px;
   border-radius: 4px;
   background: ${color.backgroundMedium};
@@ -26,7 +27,7 @@ export const BarCont = styled.div`
 export const Bar = styled.div`
   height: 5px;
   border-radius: 4px;
-  background: ${color.primary};
+  background: ${props => props.color};
   transition: all 0.1s;
   width: ${props => props.width}%;
 `;

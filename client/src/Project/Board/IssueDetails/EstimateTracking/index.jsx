@@ -46,7 +46,7 @@ const ProjectBoardIssueDetailsEstimateTracking = ({ issue, updateIssue }) => (
             </InputCont>
             <InputCont>
               <InputLabel>Time remaining (hours)</InputLabel>
-              {renderHourInput('timeRemaining', issue, updateIssue)}
+              {renderHourInput('timeRemaining', issue, updateIssue, true)}
             </InputCont>
           </Inputs>
           <Actions>
@@ -60,14 +60,24 @@ const ProjectBoardIssueDetailsEstimateTracking = ({ issue, updateIssue }) => (
   </Fragment>
 );
 
-const renderHourInput = (fieldName, issue, updateIssue) => (
+const renderHourInput = (fieldName, issue, updateIssue, readOnly = false) => (
   <InputDebounced
     placeholder="Number"
     filter={/^\d{0,6}$/}
     value={isNil(issue[fieldName]) ? '' : issue[fieldName]}
+    readOnly={readOnly}
+    onFocus={event => {
+      if (readOnly) {
+        event.target.style.cursor = 'not-allowed';
+      }
+    }}
     onChange={stringValue => {
       const value = stringValue.trim() ? Number(stringValue) : null;
-      updateIssue({ [fieldName]: value });
+
+      issue[fieldName] = value;
+      issue.timeSpent = issue.timeSpent ? issue.timeSpent : 0;
+      issue.timeRemaining = Math.max(issue.estimate - issue.timeSpent, 0);
+      updateIssue({ [fieldName]: value, timeRemaining: issue.timeRemaining });
     }}
   />
 );

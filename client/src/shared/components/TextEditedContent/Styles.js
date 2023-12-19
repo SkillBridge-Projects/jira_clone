@@ -6,4 +6,8 @@ export const Content = styled.div`
   padding: 0 !important;
   ${font.size(15)}
   ${font.regular}
+
+  .ql-mention-denotation-char {
+    color: #989898;
+  }
 `;
