@@ -1,9 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-
 import { Avatar, Select, Icon } from 'shared/components';
-
+import useCurrentUser from 'shared/hooks/currentUser';
 import { SectionTitle } from '../Styles';
 import { User, Username } from './Styles';
 
@@ -14,6 +13,9 @@ const propTypes = {
 };
 
 const ProjectBoardIssueDetailsAssigneesReporter = ({ issue, updateIssue, projectUsers }) => {
+  const { currentUser } = useCurrentUser();
+  const { isAdmin } = currentUser;
+
   const getUserById = userId => projectUsers.find(user => user._id === userId);
 
   const userOptions = projectUsers.map(user => ({ value: user._id, label: user.name }));
@@ -29,7 +31,6 @@ const ProjectBoardIssueDetailsAssigneesReporter = ({ issue, updateIssue, project
         options={userOptions}
         onChange={userId => {
           updateIssue({ userIds: [userId], users: [getUserById(userId)] });
-          // updateIssue({ userId, users: userIds.map(getUserById) });
         }}
         renderValue={({ value: userId, removeOptionValue }) =>
           renderUser(getUserById(userId), true, removeOptionValue)
@@ -38,6 +39,7 @@ const ProjectBoardIssueDetailsAssigneesReporter = ({ issue, updateIssue, project
       />
 
       <SectionTitle>Reporter</SectionTitle>
+      {}
       <Select
         variant="empty"
         dropdownWidth={343}
@@ -46,16 +48,19 @@ const ProjectBoardIssueDetailsAssigneesReporter = ({ issue, updateIssue, project
         value={issue.reporterId}
         options={userOptions}
         onChange={userId => updateIssue({ reporterId: userId })}
-        renderValue={({ value: userId }) => renderUser(getUserById(userId), true)}
+        isEdit={isAdmin}
+        renderValue={({ value: userId }) => renderUser(getUserById(userId), true, null, true)}
         renderOption={({ value: userId }) => renderUser(getUserById(userId))}
       />
     </Fragment>
   );
 };
 
-const renderUser = (user, isSelectValue, removeOptionValue) => (
+const renderUser = (user, isSelectValue, removeOptionValue, isNonEdit) => (
   <User
     key={user._id}
+    isNonEdit={isNonEdit}
+    title={isNonEdit && 'Only admins can change'}
     isSelectValue={isSelectValue}
     withBottomMargin={!!removeOptionValue}
     onClick={() => removeOptionValue && removeOptionValue()}
