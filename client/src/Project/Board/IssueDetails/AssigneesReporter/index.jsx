@@ -49,7 +49,7 @@ const ProjectBoardIssueDetailsAssigneesReporter = ({ issue, updateIssue, project
         options={userOptions}
         onChange={userId => updateIssue({ reporterId: userId })}
         isEdit={isAdmin}
-        renderValue={({ value: userId }) => renderUser(getUserById(userId), true, null, true)}
+        renderValue={({ value: userId }) => renderUser(getUserById(userId), true, null, !isAdmin)}
         renderOption={({ value: userId }) => renderUser(getUserById(userId))}
       />
     </Fragment>
