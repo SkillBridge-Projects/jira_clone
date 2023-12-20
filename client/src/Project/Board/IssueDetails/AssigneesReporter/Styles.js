@@ -15,7 +15,7 @@ export const User = styled.div`
       background: ${color.backgroundLight};
       transition: background 0.1s;
       &:hover {
-        cursor: ${props.isNonEdit ? 'not-allowed' : 'inset'};
+        ${props.isNonEdit && 'cursor : not-allowed'}
       }
     `}
 `;

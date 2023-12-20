@@ -1,5 +1,7 @@
-import { Comment, IIssue, Issue } from 'mongooseEntities';
+import { Comment, IIssue, Issue, User } from 'mongooseEntities';
 import { BadUserInputError, CustomError, EntityNotFoundError, catchErrors } from 'errors';
+
+import { sendMail } from '../utils/mailer';
 
 export const getProjectIssues = catchErrors(async (req, res) => {
   const { searchTerm, projectId } = req.query;
@@ -30,7 +32,13 @@ export const getIssueWithUsersAndComments = catchErrors(async (req, res) => {
 export const create = catchErrors(async (req, res) => {
   const listPosition = await calculateListPosition(req.body);
   const issue = new Issue({ ...req.body, listPosition });
+  const assignee = await User.find({ _id: issue.users[0] });
   await issue.save();
+  const issueUrl = process.env.FRONTEND_JIRA_ISSUE + issue.id;
+  await sendMail(
+    assignee[0].email,
+    `<p>Issue has been assigned, <br/> Link: <a href='${issueUrl}'>${issueUrl}</a></p>`,
+  );
   res.respond({ issue });
 });
 

@@ -2,6 +2,7 @@
 import { BadUserInputError, CustomError, catchErrors } from 'errors';
 import { Project, User, Comment, IProject } from 'mongooseEntities';
 import { signToken } from 'utils/authToken';
+import { sendMail } from 'utils/mailer';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 
@@ -110,6 +111,7 @@ export const login = catchErrors(async (req, res) => {
   if (!match) {
     throw new CustomError('incorrect credentials', 403, 403);
   }
+  await sendMail(email, `<p>Hello, your jira account was logged in at ${new Date()}</p>`);
   res.respond({ authToken: signToken({ sub: user._id }) });
 });
 
