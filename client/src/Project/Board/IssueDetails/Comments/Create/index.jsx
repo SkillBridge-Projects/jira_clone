@@ -13,6 +13,7 @@ import { Create, UserAvatar, Right, FakeTextarea } from './Styles';
 const propTypes = {
   issueId: PropTypes.number.isRequired,
   fetchIssue: PropTypes.func.isRequired,
+  projectUsers: PropTypes.func.isRequired,
 };
 
 const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue, projectUsers }) => {
@@ -21,11 +22,20 @@ const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue, projectUs
   const [body, setBody] = useState('');
 
   const { currentUser } = useCurrentUser();
+  const [mentionedUser, setMentionedUser] = useState(null);
+  const mentionedUserDeatils = projectUsers.find(user => user._id === mentionedUser);
+  const mentionedUserMail = mentionedUserDeatils ? mentionedUserDeatils.email : null;
 
   const handleCommentCreate = async () => {
     try {
       setCreating(true);
-      await api.post(`/comments`, { body, issue: issueId, user: currentUser._id });
+      await api.post(`/comments`, {
+        body,
+        issue: issueId,
+        user: currentUser._id,
+        userName: currentUser.name,
+        mentionedUserMail,
+      });
       await fetchIssue();
       setFormOpen(false);
       setCreating(false);
@@ -47,6 +57,7 @@ const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue, projectUs
             onSubmit={handleCommentCreate}
             onCancel={() => setFormOpen(false)}
             projectUsers={projectUsers}
+            setMentionedUser={setMentionedUser}
           />
         ) : (
           <Fragment>

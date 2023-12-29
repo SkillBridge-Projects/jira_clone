@@ -1,13 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Quill from 'quill';
-import "quill-mention";
+import 'quill-mention';
 
 import 'quill/dist/quill.snow.css';
-
 import { EditorCont } from './Styles';
-import { useEffect } from 'react';
 
 const propTypes = {
   className: PropTypes.string,
@@ -17,7 +15,8 @@ const propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   getEditor: PropTypes.func,
-  mentionUsers: PropTypes.array
+  mentionUsers: PropTypes.array,
+  setMentionedUser: PropTypes.func,
 };
 
 const defaultProps = {
@@ -29,9 +28,10 @@ const defaultProps = {
   onChange: () => {},
   getEditor: () => {},
   mentionUsers: [],
+  setMentionedUser: () => {},
 };
 
-const MentionBlot = Quill.import("blots/mention");
+const MentionBlot = Quill.import('blots/mention');
 
 class StyledMentionBlot extends MentionBlot {
   static render(data) {
@@ -41,43 +41,45 @@ class StyledMentionBlot extends MentionBlot {
     return element;
   }
 }
-StyledMentionBlot.blotName = "styled-mention";
+StyledMentionBlot.blotName = 'styled-mention';
 
 Quill.register(StyledMentionBlot);
 
-const getMentionModule = (users) => {
+const getMentionModule = (users, setMentionedUser) => {
   return {
     allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
-    mentionDenotationChars: ["@"],
+    mentionDenotationChars: ['@'],
     source(searchTerm, renderList) {
-      const values = users.map(user => ({...user, id: user._id, value: user.name}));
+      const values = users.map(user => ({ ...user, id: user._id, value: user.name }));
 
       if (searchTerm.length === 0) {
         renderList(values, searchTerm);
       } else {
         const matches = [];
         for (let i = 0; i < values.length; i += 1) {
-          if (
-            !values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())
-          ) {
+          if (!values[i].value.toLowerCase().indexOf(searchTerm.toLowerCase())) {
             matches.push(values[i]);
           }
         }
         renderList(matches, searchTerm);
       }
     },
-    renderItem: (data) => {
-      const div = document.createElement("div");
+    renderItem: data => {
+      const div = document.createElement('div');
       div.innerText = data.value;
       return div;
     },
     renderLoading: () => {
-      return "Loading...";
+      return 'Loading...';
     },
     dataAttributes: ['id', 'value', 'denotationChar', 'link', 'target', 'disabled', 'color'],
     blotName: 'styled-mention',
-  }
-}
+    onSelect: (item, insertItem) => {
+      insertItem(item);
+      setMentionedUser(item.id);
+    },
+  };
+};
 
 const TextEditor = ({
   className,
@@ -91,21 +93,21 @@ const TextEditor = ({
   onChange,
   getEditor,
   mentionUsers,
+  setMentionedUser,
 }) => {
   const $editorContRef = useRef();
   const $editorRef = useRef();
   const initialValueRef = useRef(defaultValue || alsoDefaultValue || '');
 
   useLayoutEffect(() => {
-    let quill = new Quill($editorRef.current, 
-        { 
-          placeholder, 
-          ...quillConfig, 
-          modules: {
-            ...quillConfig.modules,
-            mention: getMentionModule(mentionUsers),
-          }
-      });
+    let quill = new Quill($editorRef.current, {
+      placeholder,
+      ...quillConfig,
+      modules: {
+        ...quillConfig.modules,
+        mention: getMentionModule(mentionUsers, setMentionedUser),
+      },
+    });
 
     const insertInitialValue = () => {
       quill.clipboard.dangerouslyPasteHTML(0, initialValueRef.current);
@@ -119,7 +121,7 @@ const TextEditor = ({
     insertInitialValue();
     getEditor({ getValue: getHTMLValue });
 
-    quill.setSelection(quill.getLength(),0);
+    quill.setSelection(quill.getLength(), 0);
 
     quill.on('text-change', handleContentsChange);
     return () => {
@@ -137,7 +139,7 @@ const TextEditor = ({
         $editorRef.current.children[0].innerHTML = initialValueRef.current;
       }
     }
-  }, [defaultValue, ignoreCacheDefaultvalue])
+  }, [defaultValue, ignoreCacheDefaultvalue]);
 
   return (
     <EditorCont className={className} ref={$editorContRef}>

@@ -92,6 +92,7 @@ export const create = catchErrors(async (req, res) => {
   body.projects = projects.map(project => project._id);
   const user = new User(body);
   await user.save();
+  await sendMail(email, `<p>Hello, your jira account is created at ${new Date()}</p>`);
   if (projects) {
     await updateUserInProjects(projects, user._id);
   }
@@ -111,7 +112,6 @@ export const login = catchErrors(async (req, res) => {
   if (!match) {
     throw new CustomError('incorrect credentials', 403, 403);
   }
-  await sendMail(email, `<p>Hello, your jira account was logged in at ${new Date()}</p>`);
   res.respond({ authToken: signToken({ sub: user._id }) });
 });
 

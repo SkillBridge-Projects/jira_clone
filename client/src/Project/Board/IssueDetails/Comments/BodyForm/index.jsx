@@ -1,7 +1,7 @@
 import React, { Fragment, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import { TextEditor, Textarea } from 'shared/components';
+import { TextEditor } from 'shared/components';
 
 import { Actions, FormButton } from './Styles';
 
@@ -11,6 +11,8 @@ const propTypes = {
   isWorking: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  projectUsers: PropTypes.func.isRequired,
+  setMentionedUser: PropTypes.func.isRequired,
 };
 
 const ProjectBoardIssueDetailsCommentsBodyForm = ({
@@ -20,6 +22,7 @@ const ProjectBoardIssueDetailsCommentsBodyForm = ({
   onSubmit,
   onCancel,
   projectUsers,
+  setMentionedUser,
 }) => {
   const $textareaRef = useRef();
 
@@ -37,6 +40,7 @@ const ProjectBoardIssueDetailsCommentsBodyForm = ({
         onChange={onChange}
         ref={$textareaRef}
         mentionUsers={projectUsers}
+        setMentionedUser={setMentionedUser}
       />
       <Actions>
         <FormButton variant="primary" isWorking={isWorking} onClick={handleSubmit}>
