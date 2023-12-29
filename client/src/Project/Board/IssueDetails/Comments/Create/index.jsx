@@ -6,7 +6,6 @@ import api from 'shared/utils/api';
 import useCurrentUser from 'shared/hooks/currentUser';
 import toast from 'shared/utils/toast';
 
-import { mentionedUserProvider } from 'shared/hooks/mentionedUser';
 import BodyForm from '../BodyForm';
 import ProTip from './ProTip';
 import { Create, UserAvatar, Right, FakeTextarea } from './Styles';
@@ -51,17 +50,15 @@ const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue, projectUs
       {currentUser && <UserAvatar name={currentUser.name} avatarUrl={currentUser.avatarUrl} />}
       <Right>
         {isFormOpen ? (
-          <mentionedUserProvider value={{ mentionedUser, setMentionedUser }}>
-            <BodyForm
-              value={body}
-              onChange={setBody}
-              isWorking={isCreating}
-              onSubmit={handleCommentCreate}
-              onCancel={() => setFormOpen(false)}
-              projectUsers={projectUsers}
-              setMentionedUser={setMentionedUser}
-            />
-          </mentionedUserProvider>
+          <BodyForm
+            value={body}
+            onChange={setBody}
+            isWorking={isCreating}
+            onSubmit={handleCommentCreate}
+            onCancel={() => setFormOpen(false)}
+            projectUsers={projectUsers}
+            setMentionedUser={setMentionedUser}
+          />
         ) : (
           <Fragment>
             <FakeTextarea onClick={() => setFormOpen(true)}>Add a comment...</FakeTextarea>

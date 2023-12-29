@@ -5,7 +5,6 @@ import Quill from 'quill';
 import 'quill-mention';
 
 import 'quill/dist/quill.snow.css';
-import useMentionedUser from 'shared/hooks/mentionedUser';
 import { EditorCont } from './Styles';
 
 const propTypes = {
@@ -17,6 +16,7 @@ const propTypes = {
   onChange: PropTypes.func,
   getEditor: PropTypes.func,
   mentionUsers: PropTypes.array,
+  setMentionedUser: PropTypes.func,
 };
 
 const defaultProps = {
@@ -28,6 +28,7 @@ const defaultProps = {
   onChange: () => {},
   getEditor: () => {},
   mentionUsers: [],
+  setMentionedUser: () => {},
 };
 
 const MentionBlot = Quill.import('blots/mention');
@@ -44,7 +45,7 @@ StyledMentionBlot.blotName = 'styled-mention';
 
 Quill.register(StyledMentionBlot);
 
-const getMentionModule = (users, changeMentionUser) => {
+const getMentionModule = (users, setMentionedUser) => {
   return {
     allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
     mentionDenotationChars: ['@'],
@@ -75,7 +76,7 @@ const getMentionModule = (users, changeMentionUser) => {
     blotName: 'styled-mention',
     onSelect: (item, insertItem) => {
       insertItem(item);
-      changeMentionUser(item.id);
+      setMentionedUser(item.id);
     },
   };
 };
@@ -92,11 +93,11 @@ const TextEditor = ({
   onChange,
   getEditor,
   mentionUsers,
+  setMentionedUser,
 }) => {
   const $editorContRef = useRef();
   const $editorRef = useRef();
   const initialValueRef = useRef(defaultValue || alsoDefaultValue || '');
-  const { changeMentionUser } = useMentionedUser();
 
   useLayoutEffect(() => {
     let quill = new Quill($editorRef.current, {
@@ -104,7 +105,7 @@ const TextEditor = ({
       ...quillConfig,
       modules: {
         ...quillConfig.modules,
-        mention: getMentionModule(mentionUsers, changeMentionUser),
+        mention: getMentionModule(mentionUsers, setMentionedUser),
       },
     });
 
