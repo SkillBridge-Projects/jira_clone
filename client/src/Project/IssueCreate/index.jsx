@@ -29,6 +29,7 @@ const propTypes = {
   fetchProject: PropTypes.func.isRequired,
   onCreate: PropTypes.func.isRequired,
   modalClose: PropTypes.func.isRequired,
+  projectUsers: PropTypes.array.isRequired,
 };
 
 const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose, projectUsers }) => {
@@ -60,6 +61,7 @@ const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose, proje
             status: IssueStatus.BACKLOG,
             project: project._id,
             users: [{ _id: values.userIds }],
+            authorId: currentUserId,
           });
           await fetchProject();
           toast.success('Issue has been successfully created.');

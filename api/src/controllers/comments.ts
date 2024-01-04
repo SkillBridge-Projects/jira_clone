@@ -1,18 +1,24 @@
 import { BadUserInputError, EntityNotFoundError, catchErrors } from 'errors';
-import { Comment } from 'mongooseEntities';
-import { sendMail } from '../utils/mailer';
+import { Comment, User } from 'mongooseEntities';
+import { sendMail } from 'utils/mailer';
+import { Error } from 'mongoose';
+import { FRONT_END_URLS } from 'utils/urls';
+import { mentionedInCommentTemplate } from 'utils/mailTemplates';
 
 export const create = catchErrors(async (req, res) => {
-  const { userName, mentionedUserMail, ...body } = req.body;
-  const issueUrl = process.env.FRONTEND_JIRA_ISSUE + body.issue;
+  const { userName, mentionedUsers, ...body } = req.body;
+  const issueUrl = process.env.FRONTEND_JIRA_BASE_URL + FRONT_END_URLS.issues + body.issue;
   const comment = new Comment(body);
   await comment.save();
-
-  if (mentionedUserMail) {
-    await sendMail(
-      mentionedUserMail,
-      `<p>${userName} mentioned you in a comment, <br/> Link: <a href='${issueUrl}'>${issueUrl}</a></p>`,
-    );
+  if (mentionedUsers.length !== 0) {
+    for (const userId of mentionedUsers) {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error('User not found.');
+      }
+      const mail = mentionedInCommentTemplate(userName, body.body, issueUrl);
+      sendMail(user.email, mail.subject, mail.body);
+    }
   }
   res.respond({ comment });
 });
