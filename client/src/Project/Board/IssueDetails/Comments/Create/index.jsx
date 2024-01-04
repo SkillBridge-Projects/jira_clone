@@ -6,6 +6,7 @@ import api from 'shared/utils/api';
 import useCurrentUser from 'shared/hooks/currentUser';
 import toast from 'shared/utils/toast';
 
+import { mentionedUserProvider } from 'shared/hooks/mentionedUser';
 import BodyForm from '../BodyForm';
 import ProTip from './ProTip';
 import { Create, UserAvatar, Right, FakeTextarea } from './Styles';
@@ -20,9 +21,11 @@ const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue, projectUs
   const [isFormOpen, setFormOpen] = useState(false);
   const [isCreating, setCreating] = useState(false);
   const [body, setBody] = useState('');
-  const [mentionedUserIdList, setMentionedUserIdList] = useState([]);
 
   const { currentUser } = useCurrentUser();
+  const [mentionedUser, setMentionedUser] = useState(null);
+  const mentionedUserDeatils = projectUsers.find(user => user._id === mentionedUser);
+  const mentionedUserMail = mentionedUserDeatils ? mentionedUserDeatils.email : null;
 
   const handleCommentCreate = async () => {
     try {
@@ -32,7 +35,7 @@ const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue, projectUs
         issue: issueId,
         user: currentUser._id,
         userName: currentUser.name,
-        mentionedUsers: mentionedUserIdList,
+        mentionedUserMail,
       });
       await fetchIssue();
       setFormOpen(false);
@@ -48,17 +51,17 @@ const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue, projectUs
       {currentUser && <UserAvatar name={currentUser.name} avatarUrl={currentUser.avatarUrl} />}
       <Right>
         {isFormOpen ? (
-          <BodyForm
-            value={body}
-            onChange={(commentBody, mentionedlist) => {
-              setBody(commentBody);
-              setMentionedUserIdList(mentionedlist);
-            }}
-            isWorking={isCreating}
-            onSubmit={handleCommentCreate}
-            onCancel={() => setFormOpen(false)}
-            projectUsers={projectUsers}
-          />
+          <mentionedUserProvider value={{ mentionedUser, setMentionedUser }}>
+            <BodyForm
+              value={body}
+              onChange={setBody}
+              isWorking={isCreating}
+              onSubmit={handleCommentCreate}
+              onCancel={() => setFormOpen(false)}
+              projectUsers={projectUsers}
+              setMentionedUser={setMentionedUser}
+            />
+          </mentionedUserProvider>
         ) : (
           <Fragment>
             <FakeTextarea onClick={() => setFormOpen(true)}>Add a comment...</FakeTextarea>

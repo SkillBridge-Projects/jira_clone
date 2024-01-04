@@ -21,7 +21,6 @@ export interface IIssue extends Document {
   project: mongoose.Types.ObjectId;
   comments: mongoose.Types.ObjectId[];
   users: mongoose.Types.ObjectId[];
-  authorId: mongoose.Types.ObjectId;
 }
 
 const IssueSchema: Schema = new Schema(
@@ -76,10 +75,6 @@ const IssueSchema: Schema = new Schema(
         ref: 'User',
       },
     ],
-    authorId: {
-      type: mongoose.Types.ObjectId,
-      ref: 'User',
-    },
   },
   {
     timestamps: true,

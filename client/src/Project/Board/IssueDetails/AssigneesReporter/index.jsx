@@ -39,6 +39,7 @@ const ProjectBoardIssueDetailsAssigneesReporter = ({ issue, updateIssue, project
       />
 
       <SectionTitle>Reporter</SectionTitle>
+      {}
       <Select
         variant="empty"
         dropdownWidth={343}

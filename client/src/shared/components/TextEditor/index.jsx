@@ -5,6 +5,7 @@ import Quill from 'quill';
 import 'quill-mention';
 
 import 'quill/dist/quill.snow.css';
+import useMentionedUser from 'shared/hooks/mentionedUser';
 import { EditorCont } from './Styles';
 
 const propTypes = {
@@ -43,7 +44,7 @@ StyledMentionBlot.blotName = 'styled-mention';
 
 Quill.register(StyledMentionBlot);
 
-const getMentionModule = users => {
+const getMentionModule = (users, changeMentionUser) => {
   return {
     allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
     mentionDenotationChars: ['@'],
@@ -72,6 +73,10 @@ const getMentionModule = users => {
     },
     dataAttributes: ['id', 'value', 'denotationChar', 'link', 'target', 'disabled', 'color'],
     blotName: 'styled-mention',
+    onSelect: (item, insertItem) => {
+      insertItem(item);
+      changeMentionUser(item.id);
+    },
   };
 };
 
@@ -91,6 +96,7 @@ const TextEditor = ({
   const $editorContRef = useRef();
   const $editorRef = useRef();
   const initialValueRef = useRef(defaultValue || alsoDefaultValue || '');
+  const { changeMentionUser } = useMentionedUser();
 
   useLayoutEffect(() => {
     let quill = new Quill($editorRef.current, {
@@ -98,7 +104,7 @@ const TextEditor = ({
       ...quillConfig,
       modules: {
         ...quillConfig.modules,
-        mention: getMentionModule(mentionUsers),
+        mention: getMentionModule(mentionUsers, changeMentionUser),
       },
     });
 
@@ -107,13 +113,7 @@ const TextEditor = ({
       quill.blur();
     };
     const handleContentsChange = () => {
-      const mentionSpans = $editorContRef.current
-        .querySelector('.ql-editor')
-        .querySelectorAll('span.mention[data-denotation-char="@"]');
-      const mentionedUserIdList = Array.from(mentionSpans).map(span =>
-        span.getAttribute('data-id'),
-      );
-      onChange(getHTMLValue(), mentionedUserIdList);
+      onChange(getHTMLValue());
     };
     const getHTMLValue = () => $editorContRef.current.querySelector('.ql-editor').innerHTML;
 

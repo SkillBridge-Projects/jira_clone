@@ -13,16 +13,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendMail = async (
-  mailTo: string,
-  subject: string,
-  htmlText: string,
-): Promise<void> => {
+export const sendMail = async (mailTo: string, htmlText: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const mailOptions = {
       from: process.env.MAILER_MAIL_ID,
       to: mailTo,
-      subject,
+      subject: 'Jira Notification',
       html: htmlText,
     };
 
