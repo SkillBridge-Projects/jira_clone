@@ -13,19 +13,27 @@ import { Create, UserAvatar, Right, FakeTextarea } from './Styles';
 const propTypes = {
   issueId: PropTypes.number.isRequired,
   fetchIssue: PropTypes.func.isRequired,
+  projectUsers: PropTypes.func.isRequired,
 };
 
 const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue, projectUsers }) => {
   const [isFormOpen, setFormOpen] = useState(false);
   const [isCreating, setCreating] = useState(false);
   const [body, setBody] = useState('');
+  const [mentionedUserIdList, setMentionedUserIdList] = useState([]);
 
   const { currentUser } = useCurrentUser();
 
   const handleCommentCreate = async () => {
     try {
       setCreating(true);
-      await api.post(`/comments`, { body, issue: issueId, user: currentUser._id });
+      await api.post(`/comments`, {
+        body,
+        issue: issueId,
+        user: currentUser._id,
+        userName: currentUser.name,
+        mentionedUsers: mentionedUserIdList,
+      });
       await fetchIssue();
       setFormOpen(false);
       setCreating(false);
@@ -42,7 +50,10 @@ const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue, projectUs
         {isFormOpen ? (
           <BodyForm
             value={body}
-            onChange={setBody}
+            onChange={(commentBody, mentionedlist) => {
+              setBody(commentBody);
+              setMentionedUserIdList(mentionedlist);
+            }}
             isWorking={isCreating}
             onSubmit={handleCommentCreate}
             onCancel={() => setFormOpen(false)}

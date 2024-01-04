@@ -26,13 +26,14 @@ export const EditorCont = styled.div`
 
   .ql-mention-list {
     background-color: #fff;
-    border:1px solid #f0f0f0;
+    border: 1px solid #f0f0f0;
     border-radius: 4px;
-    box-shadow:0 2px 12px 0 rgba(30,30,30,.08);
+    box-shadow: 0 2px 12px 0 rgba(30, 30, 30, 0.08);
     overflow: auto;
     width: 270px;
     max-height: 200px;
-    z-index: 9001;
+    position: relative;
+    z-index: 1;
   }
 
   .ql-mention-list-item {

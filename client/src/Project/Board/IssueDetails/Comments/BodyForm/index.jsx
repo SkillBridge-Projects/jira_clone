@@ -1,7 +1,7 @@
 import React, { Fragment, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import { TextEditor, Textarea } from 'shared/components';
+import { TextEditor } from 'shared/components';
 
 import { Actions, FormButton } from './Styles';
 
@@ -11,6 +11,7 @@ const propTypes = {
   isWorking: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  projectUsers: PropTypes.func.isRequired,
 };
 
 const ProjectBoardIssueDetailsCommentsBodyForm = ({

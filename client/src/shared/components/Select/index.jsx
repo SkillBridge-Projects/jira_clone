@@ -30,6 +30,7 @@ const propTypes = {
   onCreate: PropTypes.func,
   isMulti: PropTypes.bool,
   withClearValue: PropTypes.bool,
+  isEdit: PropTypes.bool,
   renderValue: PropTypes.func,
   renderOption: PropTypes.func,
 };
@@ -46,6 +47,7 @@ const defaultProps = {
   onCreate: undefined,
   isMulti: false,
   withClearValue: true,
+  isEdit: true,
   renderValue: undefined,
   renderOption: undefined,
 };
@@ -64,6 +66,7 @@ const Select = ({
   onCreate,
   isMulti,
   withClearValue,
+  isEdit,
   renderValue: propsRenderValue,
   renderOption: propsRenderOption,
 }) => {
@@ -78,10 +81,12 @@ const Select = ({
   const $inputRef = useRef();
 
   const activateDropdown = () => {
-    if (isDropdownOpen) {
-      $inputRef.current.focus();
-    } else {
-      setDropdownOpen(true);
+    if (isEdit) {
+      if (isDropdownOpen) {
+        $inputRef.current.focus();
+      } else {
+        setDropdownOpen(true);
+      }
     }
   };
 
@@ -119,13 +124,15 @@ const Select = ({
   };
 
   const handleFocusedSelectKeydown = event => {
-    if (isDropdownOpen) return;
+    if (isEdit) {
+      if (isDropdownOpen) return;
 
-    if (event.keyCode === KeyCodes.ENTER) {
-      event.preventDefault();
-    }
-    if (event.keyCode !== KeyCodes.ESCAPE && event.keyCode !== KeyCodes.TAB && !event.shiftKey) {
-      setDropdownOpen(true);
+      if (event.keyCode === KeyCodes.ENTER) {
+        event.preventDefault();
+      }
+      if (event.keyCode !== KeyCodes.ESCAPE && event.keyCode !== KeyCodes.TAB && !event.shiftKey) {
+        setDropdownOpen(true);
+      }
     }
   };
 
