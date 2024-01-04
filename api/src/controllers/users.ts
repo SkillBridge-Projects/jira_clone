@@ -5,6 +5,7 @@ import { signToken } from 'utils/authToken';
 import { sendMail } from 'utils/mailer';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
+import { newAccountTemplate } from 'utils/mailTemplates';
 
 const hashPassword = async (password: string, saltRounds: number): Promise<string> => {
   const hash = await bcrypt.hash(password, saltRounds);
@@ -92,7 +93,8 @@ export const create = catchErrors(async (req, res) => {
   body.projects = projects.map(project => project._id);
   const user = new User(body);
   await user.save();
-  await sendMail(email, `<p>Hello, your jira account is created at ${new Date()}</p>`);
+  const mail = newAccountTemplate(user.name, process.env.FRONTEND_JIRA_BASE_URL);
+  sendMail(email, mail.subject, mail.body);
   if (projects) {
     await updateUserInProjects(projects, user._id);
   }

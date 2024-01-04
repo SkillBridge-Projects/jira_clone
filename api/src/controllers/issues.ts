@@ -1,6 +1,8 @@
 import { Comment, IIssue, Issue, User } from 'mongooseEntities';
 import { BadUserInputError, CustomError, EntityNotFoundError, catchErrors } from 'errors';
 
+import { FRONT_END_URLS } from 'utils/urls';
+import { issueCreatedTemplate } from 'utils/mailTemplates';
 import { sendMail } from '../utils/mailer';
 
 export const getProjectIssues = catchErrors(async (req, res) => {
@@ -32,13 +34,25 @@ export const getIssueWithUsersAndComments = catchErrors(async (req, res) => {
 export const create = catchErrors(async (req, res) => {
   const listPosition = await calculateListPosition(req.body);
   const issue = new Issue({ ...req.body, listPosition });
-  const assignee = await User.find({ _id: issue.users[0] });
+  const assignee = await User.findById(issue.users[0]);
+  const author = await User.findById(issue.authorId);
   await issue.save();
-  const issueUrl = process.env.FRONTEND_JIRA_ISSUE + issue.id;
-  await sendMail(
-    assignee[0].email,
-    `<p>Issue has been assigned, <br/> Link: <a href='${issueUrl}'>${issueUrl}</a></p>`,
-  );
+  const issueUrl = process.env.FRONTEND_JIRA_BASE_URL + FRONT_END_URLS.issues + issue.id;
+  if (!assignee) {
+    throw new Error('assignee not found');
+  }
+  const user = await User.findById(issue.reporterId);
+  if (!user) {
+    throw new Error('User not found.');
+  }
+  const issueDetails = {
+    title: issue.title,
+    reporter: user.name,
+    assignee: assignee.name,
+    url: issueUrl,
+  };
+  const mail = issueCreatedTemplate(author?.name, issueDetails);
+  sendMail(assignee?.email, mail.subject, mail.body);
   res.respond({ issue });
 });
 

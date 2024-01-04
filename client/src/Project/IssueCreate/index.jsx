@@ -61,6 +61,7 @@ const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose, proje
             status: IssueStatus.BACKLOG,
             project: project._id,
             users: [{ _id: values.userIds }],
+            authorId: currentUserId,
           });
           await fetchProject();
           toast.success('Issue has been successfully created.');
