@@ -8,22 +8,16 @@ import { formatDateTimeConversational } from 'shared/utils/dateTime';
 import { ConfirmModal, TextEditedContent } from 'shared/components';
 import useCurrentUser from 'shared/hooks/currentUser';
 import BodyForm from '../BodyForm';
-import {
-  Comment,
-  UserAvatar,
-  Content,
-  Username,
-  CreatedAt,
-  EditLink,
-  DeleteLink,
-} from './Styles';
+import { Comment, UserAvatar, Content, Username, CreatedAt, EditLink, DeleteLink } from './Styles';
 
 const propTypes = {
   comment: PropTypes.object.isRequired,
   fetchIssue: PropTypes.func.isRequired,
+  projectUsers: PropTypes.array.isRequired,
+  commentId: PropTypes.string.isRequired,
 };
 
-const ProjectBoardIssueDetailsComment = ({ comment, fetchIssue, projectUsers }) => {
+const ProjectBoardIssueDetailsComment = ({ comment, fetchIssue, projectUsers, commentId }) => {
   const [isFormOpen, setFormOpen] = useState(false);
   const [isUpdating, setUpdating] = useState(false);
   const [body, setBody] = useState(comment.body);
@@ -51,7 +45,7 @@ const ProjectBoardIssueDetailsComment = ({ comment, fetchIssue, projectUsers }) 
   };
 
   return (
-    <Comment data-testid="issue-comment">
+    <Comment data-testid="issue-comment" id={commentId}>
       <UserAvatar name={comment.user.name} avatarUrl={comment.user.avatarUrl} />
       <Content>
         <Username>{comment.user.name}</Username>
@@ -68,26 +62,28 @@ const ProjectBoardIssueDetailsComment = ({ comment, fetchIssue, projectUsers }) 
           />
         ) : (
           <Fragment>
-            <TextEditedContent content={comment.body} onClick={(event) => {
-              if (currentUser && currentUser._id !== comment.user._id) return;
-              if (event.target.tagName !== 'A') {
-                setFormOpen(true)
-              }
-            }} />
-            
-            {currentUser && currentUser._id === comment.user._id && (
-                <Fragment>
-                  <EditLink onClick={() => setFormOpen(true)}>Edit</EditLink>
-                  <ConfirmModal
-                      title="Are you sure you want to delete this comment?"
-                      message="Once you delete, it's gone for good."
-                      confirmText="Delete comment"
-                      onConfirm={handleCommentDelete}
-                      renderLink={modal => <DeleteLink onClick={modal.open}>Delete</DeleteLink>}
-                  />
-                </Fragment>
-            )}
+            <TextEditedContent
+              content={comment.body}
+              onClick={event => {
+                if (currentUser && currentUser._id !== comment.user._id) return;
+                if (event.target.tagName !== 'A') {
+                  setFormOpen(true);
+                }
+              }}
+            />
 
+            {currentUser && currentUser._id === comment.user._id && (
+              <Fragment>
+                <EditLink onClick={() => setFormOpen(true)}>Edit</EditLink>
+                <ConfirmModal
+                  title="Are you sure you want to delete this comment?"
+                  message="Once you delete, it's gone for good."
+                  confirmText="Delete comment"
+                  onConfirm={handleCommentDelete}
+                  renderLink={modal => <DeleteLink onClick={modal.open}>Delete</DeleteLink>}
+                />
+              </Fragment>
+            )}
           </Fragment>
         )}
       </Content>

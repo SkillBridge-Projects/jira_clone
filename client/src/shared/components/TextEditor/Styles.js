@@ -2,11 +2,14 @@ import styled from 'styled-components';
 
 import { color, font } from 'shared/utils/styles';
 
+const width = prop => `width:${prop}%`;
+
 export const EditorCont = styled.div`
   .ql-toolbar.ql-snow {
     border-radius: 4px 4px 0 0;
     border: 1px solid ${color.borderLightest};
     border-bottom: none;
+    ${props => width(props.width)};
   }
   .ql-container.ql-snow {
     border-radius: 0 0 4px 4px;
@@ -15,6 +18,7 @@ export const EditorCont = styled.div`
     color: ${color.textDarkest};
     ${font.size(15)}
     ${font.regular}
+    ${props => width(props.width)};
   }
   .ql-editor {
     min-height: 110px;

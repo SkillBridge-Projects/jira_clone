@@ -141,7 +141,7 @@ const TextEditor = ({
   }, [defaultValue, ignoreCacheDefaultvalue]);
 
   return (
-    <EditorCont className={className} ref={$editorContRef}>
+    <EditorCont className={className} ref={$editorContRef} width="95">
       <div ref={$editorRef} />
     </EditorCont>
   );
@@ -151,12 +151,21 @@ const quillConfig = {
   theme: 'snow',
   modules: {
     toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block', 'link'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      [{ color: [] }, { background: [] }],
-      ['clean'],
+      [
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        'blockquote',
+        'code-block',
+        'link',
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { header: [1, 2, 3, 4, 5, 6, false] },
+        { color: [] },
+        { background: [] },
+        'clean',
+      ],
     ],
   },
 };

@@ -7,13 +7,15 @@ import { Input } from 'shared/components';
 const propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func.isRequired,
+  type: PropTypes.string,
 };
 
 const defaultProps = {
   value: undefined,
+  type: 'text',
 };
 
-const InputDebounced = ({ onChange, value: propsValue, ...inputProps }) => {
+const InputDebounced = ({ onChange, value: propsValue, type, ...inputProps }) => {
   const [value, setValue] = useState(propsValue);
   const isControlled = propsValue !== undefined;
 
@@ -35,7 +37,7 @@ const InputDebounced = ({ onChange, value: propsValue, ...inputProps }) => {
     <Input
       {...inputProps}
       value={isControlled ? value : undefined}
-      type="number"
+      type={type}
       onChange={newValue => {
         setValue(newValue);
         handleChange(newValue);
