@@ -33,14 +33,14 @@ const ProjectBoard = forwardRef(({ currentProject, fetchProject }, ref) => {
   const match = useRouteMatch();
   const history = useHistory();
   const { currentUser } = useCurrentUser();
-  const [filters, mergeFilters] = useMergeState(defaultFilters);
+  const [filters, mergeFilters] = useMergeState({
+    [currentProject._id]: defaultFilters,
+  });
   const issueCreateModalHelpers = createQueryParamModalHelpers('issue-create');
-
   const [
     { data: projectData, error, setLocalData },
     fetchCurrentProject,
   ] = useApi.get(`/project/${currentProject._id}`, { projectId: currentProject._id });
-
   useImperativeHandle(
     ref,
     () => {
@@ -53,8 +53,7 @@ const ProjectBoard = forwardRef(({ currentProject, fetchProject }, ref) => {
 
   useEffect(() => {
     fetchCurrentProject();
-    mergeFilters(defaultFilters);
-  }, [fetchCurrentProject, currentProject._id, mergeFilters]);
+  }, [fetchCurrentProject, currentProject._id]);
 
   const updateLocalProjectIssues = (issueId, updatedFields) => {
     setLocalData(currentData => ({
@@ -96,12 +95,17 @@ const ProjectBoard = forwardRef(({ currentProject, fetchProject }, ref) => {
       <Filters
         projectUsers={project.users}
         defaultFilters={defaultFilters}
-        filters={filters}
-        mergeFilters={mergeFilters}
+        filters={filters[project._id] || defaultFilters}
+        mergeFilters={presentFilters => {
+          mergeFilters(prev => ({
+            ...prev,
+            [project._id]: presentFilters,
+          }));
+        }}
       />
       <Lists
         project={project}
-        filters={filters}
+        filters={filters[project._id] || defaultFilters}
         updateLocalProjectIssues={updateLocalProjectIssues}
       />
       <Route
@@ -125,25 +129,24 @@ const ProjectBoard = forwardRef(({ currentProject, fetchProject }, ref) => {
           />
         )}
       />
-      {currentProject &&
-        issueCreateModalHelpers.isOpen() && (
-          <Modal
-            isOpen
-            testid="modal:issue-create"
-            width={800}
-            withCloseIcon={false}
-            onClose={issueCreateModalHelpers.close}
-            renderContent={modal => (
-              <IssueCreate
-                project={currentProject}
-                fetchProject={fetchCurrentProject}
-                onCreate={() => history.push(`${match.url}/board`)}
-                modalClose={modal.close}
-                projectUsers={project.users}
-              />
-            )}
-          />
-        )}
+      {currentProject && issueCreateModalHelpers.isOpen() && (
+        <Modal
+          isOpen
+          testid="modal:issue-create"
+          width={800}
+          withCloseIcon={false}
+          onClose={issueCreateModalHelpers.close}
+          renderContent={modal => (
+            <IssueCreate
+              project={currentProject}
+              fetchProject={fetchCurrentProject}
+              onCreate={() => history.push(`${match.url}/board`)}
+              modalClose={modal.close}
+              projectUsers={project.users}
+            />
+          )}
+        />
+      )}
     </Fragment>
   );
 });
