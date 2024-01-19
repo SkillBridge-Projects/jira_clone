@@ -8,7 +8,9 @@ export enum IssueStatus {
   BACKLOG = 'backlog',
   SELECTED = 'selected',
   INPROGRESS = 'inprogress',
-  DONE = 'done',
+  TESTING = 'testing ',
+  TESTINGDONE = 'testingDone',
+  CLOSE = 'close',
 }
 
 export enum IssuePriority {

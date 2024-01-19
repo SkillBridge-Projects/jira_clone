@@ -44,16 +44,20 @@ export const issuePriorityColors = {
 
 export const issueStatusColors = {
   [IssueStatus.BACKLOG]: color.textDark,
-  [IssueStatus.INPROGRESS]: '#fff',
   [IssueStatus.SELECTED]: color.textDark,
-  [IssueStatus.DONE]: '#fff',
+  [IssueStatus.INPROGRESS]: color.textDark,
+  [IssueStatus.READYFORTESTING]: '#fff',
+  [IssueStatus.TESTINGDONE]: '#fff',
+  [IssueStatus.CLOSE]: '#fff',
 };
 
 export const issueStatusBackgroundColors = {
   [IssueStatus.BACKLOG]: color.backgroundMedium,
-  [IssueStatus.INPROGRESS]: color.primary,
-  [IssueStatus.SELECTED]: color.backgroundMedium,
-  [IssueStatus.DONE]: color.success,
+  [IssueStatus.SELECTED]: color.backgroundLight,
+  [IssueStatus.INPROGRESS]: color.backgroundLightPrimary,
+  [IssueStatus.READYFORTESTING]: color.primary,
+  [IssueStatus.TESTINGDONE]: color.success,
+  [IssueStatus.CLOSE]: color.backgroundDarkPrimary,
 };
 
 export const sizes = {
