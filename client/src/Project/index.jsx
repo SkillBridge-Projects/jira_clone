@@ -98,7 +98,7 @@ const Project = () => {
                 if (boardRef.current.fetchCurrentProject) {
                   boardRef.current.fetchCurrentProject();
                 }
-                fetchProject(...args)
+                fetchProject(...args);
               }}
               onCreate={() => history.push(`${match.url}/board`)}
               modalClose={modal.close}
@@ -133,12 +133,14 @@ const Project = () => {
         <Route
           path={`${match.path}/board`}
           render={() => (
-            <Board
-              ref={boardRef}
-              currentProject={currentProject}
-              fetchProject={fetchProject}
-              updateLocalProjectIssues={updateLocalProjectIssues}
-            />
+            <div style={{ width: '90vw', marginLeft: '-220px' }}>
+              <Board
+                ref={boardRef}
+                currentProject={currentProject}
+                fetchProject={fetchProject}
+                updateLocalProjectIssues={updateLocalProjectIssues}
+              />
+            </div>
           )}
         />
       )}

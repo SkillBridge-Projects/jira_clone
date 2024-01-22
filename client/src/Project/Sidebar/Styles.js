@@ -9,9 +9,12 @@ export const Sidebar = styled.div`
   left: ${sizes.appNavBarLeftWidth}px;
   height: 100vh;
   width: ${sizes.secondarySideBarWidth}px;
-  padding: 0 16px 24px;
+  padding: 0 48px 24px 16px;
   background: ${color.backgroundLightest};
   border-right: 1px solid ${color.borderLightest};
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  transform: ${props => (props.isVisible ? `translateX(0px)` : `translateX(-200px)`)};
+  transition: transform 0.3s ease;
   ${mixin.scrollableY}
   ${mixin.customScrollbar()}
   @media (max-width: 1100px) {
@@ -91,4 +94,21 @@ export const NotImplemented = styled.div`
   ${LinkItem}:hover & {
     opacity: 1;
   }
+`;
+
+export const Arrow = styled.button`
+  position: relative;
+  top:10%;
+  transform:
+  ${props => props.isVisible && ` rotate(180deg);`}
+  transition: transform 0.3s ease;
+  display: inline-block;
+  left:113%;
+  border-radius: 10%;
+  background: ${color.primary};
+  color: white;
+  padding: 0.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: click;
 `;

@@ -77,6 +77,14 @@ const ProjectBoard = forwardRef(({ currentProject, fetchProject }, ref) => {
 
   const { project } = projectData;
 
+  const presentProjectFilters = filters[project._id] || defaultFilters;
+  const mergeCurrentProjectFilters = presentFilters => {
+    mergeFilters(prev => ({
+      ...prev,
+      [project._id]: presentFilters,
+    }));
+  };
+
   return (
     <Fragment>
       {/* // user avatar with breadcrumbs */}
@@ -95,17 +103,12 @@ const ProjectBoard = forwardRef(({ currentProject, fetchProject }, ref) => {
       <Filters
         projectUsers={project.users}
         defaultFilters={defaultFilters}
-        filters={filters[project._id] || defaultFilters}
-        mergeFilters={presentFilters => {
-          mergeFilters(prev => ({
-            ...prev,
-            [project._id]: presentFilters,
-          }));
-        }}
+        filters={presentProjectFilters}
+        mergeFilters={mergeCurrentProjectFilters}
       />
       <Lists
         project={project}
-        filters={filters[project._id] || defaultFilters}
+        filters={presentProjectFilters}
         updateLocalProjectIssues={updateLocalProjectIssues}
       />
       <Route
