@@ -110,5 +110,5 @@ export const Arrow = styled.button`
   padding: 0.25rem;
   width: 1.5rem;
   height: 1.5rem;
-  cursor: click;
+  cursor: pointer;
 `;

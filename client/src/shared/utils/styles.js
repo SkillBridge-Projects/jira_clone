@@ -15,6 +15,7 @@ export const color = {
   textMedium: '#5E6C84',
   textLight: '#8993a4',
   textLink: '#0052cc',
+  textLightest: '#ffffff',
 
   backgroundDarkPrimary: '#0747A6',
   backgroundMedium: '#dfe1e6',
@@ -43,21 +44,21 @@ export const issuePriorityColors = {
 };
 
 export const issueStatusColors = {
-  [IssueStatus.BACKLOG]: color.textDark,
+  [IssueStatus.BACKLOG]: color.textLightest,
   [IssueStatus.SELECTED]: color.textDark,
   [IssueStatus.INPROGRESS]: color.textDark,
-  [IssueStatus.READYFORTESTING]: '#fff',
-  [IssueStatus.TESTINGDONE]: '#fff',
-  [IssueStatus.CLOSE]: '#fff',
+  [IssueStatus.READYFORTESTING]: color.textLightest,
+  [IssueStatus.TESTINGDONE]: color.textDark,
+  [IssueStatus.CLOSE]: color.textLightest,
 };
 
 export const issueStatusBackgroundColors = {
-  [IssueStatus.BACKLOG]: color.backgroundMedium,
+  [IssueStatus.BACKLOG]: color.warning,
   [IssueStatus.SELECTED]: color.backgroundLight,
   [IssueStatus.INPROGRESS]: color.backgroundLightPrimary,
   [IssueStatus.READYFORTESTING]: color.primary,
-  [IssueStatus.TESTINGDONE]: color.success,
-  [IssueStatus.CLOSE]: color.backgroundDarkPrimary,
+  [IssueStatus.TESTINGDONE]: color.backgroundLightSuccess,
+  [IssueStatus.CLOSE]: color.success,
 };
 
 export const sizes = {

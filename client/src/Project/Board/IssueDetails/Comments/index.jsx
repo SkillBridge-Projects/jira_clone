@@ -41,7 +41,7 @@ const ProjectBoardIssueDetailsComments = ({ issue, fetchIssue, projectUsers }) =
         {!isCompleted && showComments < sortedComments.length && (
           <ActionButton
             type="button"
-            variant="primary"
+            variant="empty"
             onClick={() => {
               setShowComments(prev => prev + 3);
               if (showComments + 3 >= sortedComments.length) {
@@ -49,7 +49,7 @@ const ProjectBoardIssueDetailsComments = ({ issue, fetchIssue, projectUsers }) =
               }
             }}
           >
-            Show More ...
+            Show More ▼
           </ActionButton>
         )}
       </CommentScroll>

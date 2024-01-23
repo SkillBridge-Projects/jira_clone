@@ -36,7 +36,4 @@ export const CommentScroll = styled.div`
 }
 `;
 
-export const ActionButton = styled(Button)`
-  margin-left: 50%;
-  transform: translateX(-50%);
-`;
+export const ActionButton = styled(Button)``;
