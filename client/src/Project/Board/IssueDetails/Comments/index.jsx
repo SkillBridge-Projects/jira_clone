@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { sortByNewest } from 'shared/utils/javascript';
@@ -12,12 +12,25 @@ const propTypes = {
   issue: PropTypes.object.isRequired,
   fetchIssue: PropTypes.func.isRequired,
   projectUsers: PropTypes.array.isRequired,
+  isMentionedComment: PropTypes.bool.isRequired,
 };
 
-const ProjectBoardIssueDetailsComments = ({ issue, fetchIssue, projectUsers }) => {
+const ProjectBoardIssueDetailsComments = ({
+  issue,
+  fetchIssue,
+  projectUsers,
+  isMentionedComment,
+}) => {
   const [showComments, setShowComments] = useState(3);
   const [isCompleted, setIsCompleted] = useState(false);
   const sortedComments = useMemo(() => sortByNewest(issue.comments, 'createdAt'), [issue.comments]);
+  useEffect(() => {
+    if (isMentionedComment) {
+      console.log('triggered');
+      setShowComments(sortedComments.length);
+      setIsCompleted(true);
+    }
+  }, [isMentionedComment, sortedComments.length]);
   const renderComments = () => {
     return sortedComments
       .slice(0, showComments)

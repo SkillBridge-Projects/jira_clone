@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import api from 'shared/utils/api';
@@ -35,9 +35,11 @@ const ProjectBoardIssueDetails = ({
   modalClose,
 }) => {
   const [{ data, error, setLocalData }, fetchIssue] = useApi.get(`/issues/${issueId}`);
-
+  const [isMentionedComment, setIsMentionedComment] = useState(false);
   setTimeout(() => {
-    const targetComment = document.getElementById(window.location.hash.substring(1));
+    const commentId = window.location.hash.substring(1);
+    if (commentId) setIsMentionedComment(true);
+    const targetComment = document.getElementById(commentId);
     if (targetComment) {
       targetComment.scrollIntoView({ behavior: 'smooth' });
       targetComment.style.boxShadow =
@@ -49,7 +51,7 @@ const ProjectBoardIssueDetails = ({
         targetComment.style.boxShadow = 'none';
       });
     }
-  }, 1000);
+  }, 2000);
 
   if (!data) return <Loader />;
   if (error) return <PageError />;
@@ -84,7 +86,12 @@ const ProjectBoardIssueDetails = ({
         <Left>
           <Title issue={issue} updateIssue={updateIssue} />
           <Description projectUsers={projectUsers} issue={issue} updateIssue={updateIssue} />
-          <Comments projectUsers={projectUsers} issue={issue} fetchIssue={fetchIssue} />
+          <Comments
+            projectUsers={projectUsers}
+            issue={issue}
+            fetchIssue={fetchIssue}
+            isMentionedComment={isMentionedComment}
+          />
         </Left>
         <Right>
           <Status issue={issue} updateIssue={updateIssue} />
