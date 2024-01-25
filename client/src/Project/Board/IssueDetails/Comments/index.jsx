@@ -26,7 +26,6 @@ const ProjectBoardIssueDetailsComments = ({
   const sortedComments = useMemo(() => sortByNewest(issue.comments, 'createdAt'), [issue.comments]);
   useEffect(() => {
     if (isMentionedComment) {
-      console.log('triggered');
       setShowComments(sortedComments.length);
       setIsCompleted(true);
     }

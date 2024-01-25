@@ -27,6 +27,9 @@ export const color = {
   borderLightest: '#dfe1e6',
   borderLight: '#C1C7D0',
   borderInputFocus: '#4c9aff',
+
+  commentHighlightLight: ' #C5D5F8 ',
+  commentHighlightDark: ' #9EBBF2 ',
 };
 
 export const issueTypeColors = {

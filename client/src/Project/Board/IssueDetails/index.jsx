@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import api from 'shared/utils/api';
 import useApi from 'shared/hooks/api';
 import { PageError, CopyLinkButton, Button } from 'shared/components';
+import { color } from 'shared/utils/styles';
 
 import Loader from './Loader';
 import Type from './Type';

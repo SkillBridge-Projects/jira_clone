@@ -5,7 +5,7 @@ import { Avatar } from 'shared/components';
 
 export const Comment = styled.div`
   position: relative;
-  margin-top: 25px;
+  margin: 25px 0;
   ${font.size(15)}
 `;
 
