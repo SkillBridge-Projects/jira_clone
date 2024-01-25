@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import api from 'shared/utils/api';
 import useApi from 'shared/hooks/api';
 import { PageError, CopyLinkButton, Button } from 'shared/components';
+import { color } from 'shared/utils/styles';
 
 import Loader from './Loader';
 import Type from './Type';
@@ -43,12 +44,12 @@ const ProjectBoardIssueDetails = ({
     if (targetComment) {
       targetComment.scrollIntoView({ behavior: 'smooth' });
       targetComment.style.boxShadow =
-        'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px';
-      setTimeout(() => {
-        targetComment.style.boxShadow = 'none';
-      }, 10000);
+        `${color.commentHighlightDark} 0px 2px 5px, ${color.commentHighlightLight} 0px 4px 5px, ` +
+        `${color.commentHighlightDark} 0px -2px 5px, ${color.commentHighlightLight} 0px -4px 5px`;
       document.addEventListener('mousemove', () => {
-        targetComment.style.boxShadow = 'none';
+        setTimeout(() => {
+          targetComment.style.boxShadow = 'none';
+        }, 2000);
       });
     }
   }, 2000);
