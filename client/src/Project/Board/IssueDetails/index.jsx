@@ -42,7 +42,7 @@ const ProjectBoardIssueDetails = ({
     if (commentId) setIsMentionedComment(true);
     const targetComment = document.getElementById(commentId);
     if (targetComment) {
-      targetComment.scrollIntoView({ behavior: 'smooth' });
+      targetComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
       targetComment.style.boxShadow =
         `${color.commentHighlightDark} 0px 2px 5px, ${color.commentHighlightLight} 0px 4px 5px, ` +
         `${color.commentHighlightDark} 0px -2px 5px, ${color.commentHighlightLight} 0px -4px 5px`;
