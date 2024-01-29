@@ -23,7 +23,7 @@ const propTypes = {
 const ProjectBoardFilters = ({ projectUsers, defaultFilters, filters, mergeFilters }) => {
   const { searchTerm, userIds, myOnly, recent } = filters;
 
-  const areFiltersCleared = !searchTerm && userIds.length === 0 && !myOnly && !recent;
+  const areFiltersCleared = !searchTerm && userIds?.length === 0 && !myOnly && !recent;
 
   return (
     <Filters data-testid="board-filters">
@@ -34,7 +34,7 @@ const ProjectBoardFilters = ({ projectUsers, defaultFilters, filters, mergeFilte
       />
       <Avatars>
         {projectUsers.map(user => (
-          <AvatarIsActiveBorder key={user._id} isActive={userIds.includes(user._id)}>
+          <AvatarIsActiveBorder key={user._id} isActive={userIds?.includes(user._id)}>
             <StyledAvatar
               avatarUrl={user.avatarUrl}
               name={user.name}
