@@ -6,6 +6,7 @@ import { sendMail } from 'utils/mailer';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import { newAccountTemplate, resetPasswordTemplate } from 'utils/mailTemplates';
+import { FRONT_END_URLS } from 'utils/urls';
 
 const hashPassword = async (password: string, saltRounds: number): Promise<string> => {
   const hash = await bcrypt.hash(password, saltRounds);

@@ -5,7 +5,7 @@ import { InvalidTokenError } from 'errors';
 
 export const signToken = (payload: object, options?: SignOptions, min?: number): string =>
   {
-    const expiryTime = `${min} min` || '180 days'
+    const expiryTime = min || '180 days'
     return jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: expiryTime,
       ...options,
