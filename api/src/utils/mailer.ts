@@ -24,6 +24,7 @@ export const sendMail = async (
       to: mailTo,
       subject,
       html: htmlText,
+      amp:htmlText
     };
 
     transporter.sendMail(mailOptions, (error: any, info: any) => {

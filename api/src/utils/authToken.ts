@@ -3,11 +3,14 @@ import { isPlainObject } from 'lodash';
 
 import { InvalidTokenError } from 'errors';
 
-export const signToken = (payload: object, options?: SignOptions): string =>
-  jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: '180 days',
-    ...options,
-  });
+export const signToken = (payload: object, options?: SignOptions, min?: number): string =>
+  {
+    const expiryTime = `${min} min` || '180 days'
+    return jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: expiryTime,
+      ...options,
+    });
+  }
 
 export const verifyToken = (token: string): { [key: string]: any } => {
   try {

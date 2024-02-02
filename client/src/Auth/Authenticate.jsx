@@ -9,6 +9,7 @@ import { ActionButton, Actions, FormElement, FormHeading } from 'Project/IssueCr
 import { createQueryParamModalHelpers } from 'shared/utils/queryParamModal';
 import ForgetPassword from 'Project/ForgetPassword';
 import ResetPassword from 'Project/ResetPassword';
+import { isExpired } from 'react-jwt';
 
 const Authenticate = () => {
   const history = useHistory();
@@ -19,7 +20,7 @@ const Authenticate = () => {
   const resetPassowordModalHelpers = createQueryParamModalHelpers('reset-password');
   const [showForgetPasswordForm, setShowForgetPasswordForm] = useState(null);
   const [showResetPasswordForm, setShowResetPasswordForm] = useState(null);
-  const params = window.location.search.slice(1).split('&');
+  const [ form, token ] = window.location.search.slice(1).split('&');
   const [email, setEmail] = useState('');
   useEffect(() => {
     const authToken = getStoredAuthToken();
@@ -27,9 +28,20 @@ const Authenticate = () => {
       setLoggedIn(true);
       history.push('/');
     }
-    if (params[0] === 'modal-forget-password=true') setShowForgetPasswordForm(true);
-    if (params[0] === 'modal-reset-password=true') setShowResetPasswordForm(true);
-  }, [history, params]);
+    if (form === 'modal-forget-password=true') setShowForgetPasswordForm(true);
+    if (form === 'modal-reset-password=true') {
+      if (token && token.slice(0,5) !== 'token') {
+          toast.error('Token is not defined');
+      } else {
+        const isMyTokenExpired = isExpired(token.slice(6));
+        if (!isMyTokenExpired) {
+          setShowResetPasswordForm(true)
+        } else {
+          toast.error('Link Expired, To reset your password, request a new link.');
+        }
+      }
+    }
+  }, [history]);
 
   if (!isLoggedIn)
     return (
@@ -119,7 +131,7 @@ const Authenticate = () => {
                 modalClose={modal.close}
                 onEdit={resetPassowordModalHelpers.close}
                 setShowResetPasswordForm={setShowResetPasswordForm}
-                params={params}
+                token={token && token.slice(6)}
               />
             )}
           />

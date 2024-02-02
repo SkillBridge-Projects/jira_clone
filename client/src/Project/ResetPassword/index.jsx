@@ -3,8 +3,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import toast from 'shared/utils/toast';
+import useApi from 'shared/hooks/api';
 import { Form } from 'shared/components';
-
 import { FormHeading, FormElement, Divider, Actions, ActionButton } from './Stlyes';
 
 const propTypes = {
@@ -12,7 +12,8 @@ const propTypes = {
   modalClose: PropTypes.func.isRequired,
 };
 
-const ResetPassword = ({ onEdit, modalClose, setShowResetPasswordForm /* , params */ }) => {
+const ResetPassword = ({ onEdit, modalClose, setShowResetPasswordForm, token }) => {
+  const [{ isCreating }, resetPassword] = useApi.post(`/user/reset-password`);
   return (
     <Form
       enableReinitialize
@@ -31,7 +32,12 @@ const ResetPassword = ({ onEdit, modalClose, setShowResetPasswordForm /* , param
       }}
       onSubmit={async (values, form) => {
         try {
-          toast.success('Password reseted, Login with your new credentials');
+          const response = await resetPassword({password:values.newPassword, token})
+          if (response.message.status === 401) {
+            toast.error('Link Expired, To reset your password, request a new link.');
+          } else {
+            toast.success('Password reseted, Login with your new credentials');
+          }
           onEdit();
           setShowResetPasswordForm(false);
         } catch (error) {
@@ -55,7 +61,7 @@ const ResetPassword = ({ onEdit, modalClose, setShowResetPasswordForm /* , param
           placeholder="Confirm Password"
         />
         <Actions>
-          <ActionButton type="submit" variant="primary">
+          <ActionButton type="submit" variant="primary" isWorking={isCreating}>
             Reset Password
           </ActionButton>
           <ActionButton type="button" variant="empty" onClick={modalClose}>

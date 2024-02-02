@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import api from 'shared/utils/api';
@@ -35,21 +35,23 @@ const ProjectBoardIssueDetails = ({
   modalClose,
 }) => {
   const [{ data, error, setLocalData }, fetchIssue] = useApi.get(`/issues/${issueId}`);
-
+  const [isMentionedComment, setIsMentionedComment] = useState(false);
   setTimeout(() => {
-    const targetComment = document.getElementById(window.location.hash.substring(1));
+    const commentId = window.location.hash.substring(1);
+    if (commentId) setIsMentionedComment(true);
+    const targetComment = document.getElementById(commentId);
     if (targetComment) {
-      targetComment.scrollIntoView({ behavior: 'smooth' });
+      targetComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
       targetComment.style.boxShadow =
-        'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px';
-      setTimeout(() => {
-        targetComment.style.boxShadow = 'none';
-      }, 10000);
+        `${color.commentHighlightDark} 0px 2px 5px, ${color.commentHighlightLight} 0px 4px 5px, ` +
+        `${color.commentHighlightDark} 0px -2px 5px, ${color.commentHighlightLight} 0px -4px 5px`;
       document.addEventListener('mousemove', () => {
-        targetComment.style.boxShadow = 'none';
+        setTimeout(() => {
+          targetComment.style.boxShadow = 'none';
+        }, 2000);
       });
     }
-  }, 1000);
+  }, 2000);
 
   if (!data) return <Loader />;
   if (error) return <PageError />;
