@@ -23,8 +23,7 @@ export const sendMail = async (
       from: process.env.MAILER_MAIL_ID,
       to: mailTo,
       subject,
-      html: htmlText,
-      amp:htmlText
+      html: htmlText
     };
 
     transporter.sendMail(mailOptions, (error: any, info: any) => {

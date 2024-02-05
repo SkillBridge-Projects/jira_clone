@@ -1,6 +1,6 @@
 const templateHeader = (title: String) => `
     <div style="text-align:center">
-    <h1>Jira Notification</h1>
+    <h1 style="color: #5E5DF0">Jira Notification</h1>
     <h4>${title}</h4>
     <hr style="border: 2px solid black"/>
     </div>
@@ -50,11 +50,11 @@ export const resetPasswordTemplate = (username: any, urlLink:any, ) => ({
   <strong>Hi ${username},</strong>
   <p>Forgot your password?</p>
   <p>We received a request to reset the password for your account. To reset the password, click the button below to proceed.</p>
-  <button style="background: #5E5DF0; border-radius: 10px; box-shadow: #5E5DF0 0 10px 20px -10px; color: white; cursor: pointer; font-size: 16px; font-weight: 700; outline: 0 solid transparent; padding: 6px 12px; border: 0; transition: transform 0.3s ease-in-out;">
-    <a href="${urlLink}" style="text-decoration: none; color: white; display: block; width: 100%; height: 100%;">Reset Password</a>
-  </button>
-  <p>Or click the text below, copy and paste the URL into your browser:</p>
-  <p><em style="user-select: all; -webkit-user-select: all; cursor: text;">${urlLink}</em></p>
+  <a  href='${urlLink}'
+      style='background: #5E5DF0; padding: 7px 14px; border-radius: 10px; font-family:Sans-serif; font-weight: 700; color: white; text-decoration: none; box-shadow: #5E5DF0 0 10px 20px -10px;'
+  >Reset Password</a>
+  <p style="margin-top:10px">Or click the text below, copy and paste the URL into your browser:</p>
+  <p><em>${urlLink}</em></p>
   <span style="color: gray; text-decoration: underline;">If you did not request a password reset, please ignore this email or reply to let us know. This password reset link is only valid for the next 5 minutes.</span>
   </div>
     `,

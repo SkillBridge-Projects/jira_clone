@@ -32,7 +32,7 @@ const ResetPassword = ({ onEdit, modalClose, setShowResetPasswordForm, token }) 
       }}
       onSubmit={async (values, form) => {
         try {
-          const response = await resetPassword({password:values.newPassword, token})
+          const response = await resetPassword({ password:values.newPassword, token })
           if (response.message.status === 401) {
             toast.error('Link Expired, To reset your password, request a new link.');
           } else {

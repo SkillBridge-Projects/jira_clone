@@ -10,4 +10,4 @@
 # production
 **/build
 **/npm-debug.log*
-bun.lockb
+bun.*

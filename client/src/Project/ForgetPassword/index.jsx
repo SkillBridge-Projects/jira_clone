@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import toast from 'shared/utils/toast';
-// import useApi from 'shared/hooks/api';
+import useApi from 'shared/hooks/api';
 import { Form } from 'shared/components';
 
 import { FormHeading, FormElement, Divider, Actions, ActionButton } from './Stlyes';
@@ -14,6 +14,7 @@ const propTypes = {
 };
 
 const ForgetPassword = ({ onEdit, modalClose, setShowForgetPasswordForm, email }) => {
+  const [{ isCreating }, forgetPassword] = useApi.post(`/user/forget-password`);
   return (
     <Form
       enableReinitialize
@@ -25,6 +26,7 @@ const ForgetPassword = ({ onEdit, modalClose, setShowForgetPasswordForm, email }
       }}
       onSubmit={async (values, form) => {
         try {
+          await forgetPassword({ email })
           toast.success('Check your mail to reset your password');
           onEdit();
           setShowForgetPasswordForm(false);
@@ -38,7 +40,7 @@ const ForgetPassword = ({ onEdit, modalClose, setShowForgetPasswordForm, email }
         <Divider />
         <Form.Field.Input name="email" label="Enter Email" placeholder="Enter Your Email" />
         <Actions>
-          <ActionButton type="submit" variant="primary">
+          <ActionButton type="submit" variant="primary" isWorking={isCreating}>
             Forget Password
           </ActionButton>
           <ActionButton type="button" variant="empty" onClick={modalClose}>
