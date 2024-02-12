@@ -15,6 +15,7 @@ export const color = {
   textMedium: '#5E6C84',
   textLight: '#8993a4',
   textLink: '#0052cc',
+  textLightest: '#ffffff',
 
   backgroundDarkPrimary: '#0747A6',
   backgroundMedium: '#dfe1e6',
@@ -26,6 +27,9 @@ export const color = {
   borderLightest: '#dfe1e6',
   borderLight: '#C1C7D0',
   borderInputFocus: '#4c9aff',
+
+  commentHighlightLight: ' #C5D5F8 ',
+  commentHighlightDark: ' #9EBBF2 ',
 };
 
 export const issueTypeColors = {
@@ -43,17 +47,21 @@ export const issuePriorityColors = {
 };
 
 export const issueStatusColors = {
-  [IssueStatus.BACKLOG]: color.textDark,
-  [IssueStatus.INPROGRESS]: '#fff',
+  [IssueStatus.BACKLOG]: color.textLightest,
   [IssueStatus.SELECTED]: color.textDark,
-  [IssueStatus.DONE]: '#fff',
+  [IssueStatus.INPROGRESS]: color.textDark,
+  [IssueStatus.READYFORTESTING]: color.textLightest,
+  [IssueStatus.TESTINGDONE]: color.textDark,
+  [IssueStatus.CLOSE]: color.textLightest,
 };
 
 export const issueStatusBackgroundColors = {
-  [IssueStatus.BACKLOG]: color.backgroundMedium,
-  [IssueStatus.INPROGRESS]: color.primary,
-  [IssueStatus.SELECTED]: color.backgroundMedium,
-  [IssueStatus.DONE]: color.success,
+  [IssueStatus.BACKLOG]: color.warning,
+  [IssueStatus.SELECTED]: color.backgroundLight,
+  [IssueStatus.INPROGRESS]: color.backgroundLightPrimary,
+  [IssueStatus.READYFORTESTING]: color.primary,
+  [IssueStatus.TESTINGDONE]: color.backgroundLightSuccess,
+  [IssueStatus.CLOSE]: color.success,
 };
 
 export const sizes = {

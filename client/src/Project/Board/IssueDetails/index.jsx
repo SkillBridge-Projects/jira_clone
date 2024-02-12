@@ -1,10 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import api from 'shared/utils/api';
 import useApi from 'shared/hooks/api';
 import { PageError, CopyLinkButton, Button } from 'shared/components';
+import { color } from 'shared/utils/styles';
 
 import Loader from './Loader';
 import Type from './Type';
@@ -35,6 +36,30 @@ const ProjectBoardIssueDetails = ({
   modalClose,
 }) => {
   const [{ data, error, setLocalData }, fetchIssue] = useApi.get(`/issues/${issueId}`);
+  const [isMentionedComment, setIsMentionedComment] = useState(false);
+
+  useLayoutEffect(() => {
+    const highlightComment = () => {
+      const commentId = window.location.hash.substring(1);
+      if (commentId) setIsMentionedComment(true);
+      const targetComment = document.getElementById(commentId);
+      if (targetComment) {
+        targetComment.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        targetComment.style.boxShadow =
+          `${color.commentHighlightDark} 0px 2px 5px, ${color.commentHighlightLight} 0px 4px 5px, ` +
+          `${color.commentHighlightDark} 0px -2px 5px, ${color.commentHighlightLight} 0px -4px 5px`;
+      }
+    };
+
+    if (data) {
+      highlightComment();
+    }
+  }, [data]);
+
+  useEffect(() => {
+    fetchIssue();
+  }, []);
+
 
   if (!data) return <Loader />;
   if (error) return <PageError />;
@@ -69,7 +94,12 @@ const ProjectBoardIssueDetails = ({
         <Left>
           <Title issue={issue} updateIssue={updateIssue} />
           <Description projectUsers={projectUsers} issue={issue} updateIssue={updateIssue} />
-          <Comments projectUsers={projectUsers} issue={issue} fetchIssue={fetchIssue} />
+          <Comments
+            projectUsers={projectUsers}
+            issue={issue}
+            fetchIssue={fetchIssue}
+            isMentionedComment={isMentionedComment}
+          />
         </Left>
         <Right>
           <Status issue={issue} updateIssue={updateIssue} />

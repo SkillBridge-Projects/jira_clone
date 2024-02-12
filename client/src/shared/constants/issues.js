@@ -9,7 +9,8 @@ export const IssueStatus = {
   SELECTED: 'selected',
   INPROGRESS: 'inprogress',
   READYFORTESTING: 'readyfortesting',
-  DONE: 'done',
+  TESTINGDONE: 'testingDone',
+  CLOSE: 'close',
 };
 
 export const IssuePriority = {
@@ -31,7 +32,8 @@ export const IssueStatusCopy = {
   [IssueStatus.SELECTED]: 'Selected for development',
   [IssueStatus.INPROGRESS]: 'In progress',
   [IssueStatus.READYFORTESTING]: 'Ready for Testing / Review',
-  [IssueStatus.DONE]: 'Done',
+  [IssueStatus.TESTINGDONE]: 'Testing Done',
+  [IssueStatus.CLOSE]: 'Close',
 };
 
 export const IssuePriorityCopy = {

@@ -7,15 +7,18 @@ import { mentionedInCommentTemplate } from 'utils/mailTemplates';
 
 export const create = catchErrors(async (req, res) => {
   const { userName, mentionedUsers, ...body } = req.body;
-  const issueUrl = process.env.FRONTEND_JIRA_BASE_URL + FRONT_END_URLS.issues + body.issue;
   const comment = new Comment(body);
-  await comment.save();
+  const { _id } = await comment.save();
   if (mentionedUsers.length !== 0) {
     for (const userId of mentionedUsers) {
       const user = await User.findById(userId);
       if (!user) {
         throw new Error('User not found.');
       }
+      const issueUrl = `${process.env.FRONTEND_JIRA_BASE_URL +
+        FRONT_END_URLS.issues +
+        body.issue}#${_id.toString()}`;
+      console.log(issueUrl);
       const mail = mentionedInCommentTemplate(userName, body.body, issueUrl);
       sendMail(user.email, mail.subject, mail.body);
     }
