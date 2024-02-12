@@ -48,6 +48,11 @@ const ProjectBoardIssueDetails = ({
         targetComment.style.boxShadow =
           `${color.commentHighlightDark} 0px 2px 5px, ${color.commentHighlightLight} 0px 4px 5px, ` +
           `${color.commentHighlightDark} 0px -2px 5px, ${color.commentHighlightLight} 0px -4px 5px`;
+        document.addEventListener('mousemove', () => {
+          setTimeout(() => {
+            targetComment.style.boxShadow = 'none';
+          }, 2000);
+        });
       }
     };
 
