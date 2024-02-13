@@ -10,6 +10,7 @@
     "start:production": "cd api && npm run start:production && cd ../client && npm run start:production"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "husky": "^4.0.0-beta.5"
   },
   "husky": {
