@@ -97,17 +97,16 @@ export const NotImplemented = styled.div`
 `;
 
 export const Arrow = styled.button`
-  position: relative;
-  top:10%;
+  position: absolute;
+  top:20%;
+  right:1%;
   transform:
   ${props => props.isVisible && ` rotate(180deg);`}
   transition: transform 0.3s ease;
   display: inline-block;
-  left:113%;
   border-radius: 10%;
   background: ${color.primary};
   color: white;
-  padding: 0.25rem;
   width: 1.5rem;
   height: 1.5rem;
   cursor: pointer;

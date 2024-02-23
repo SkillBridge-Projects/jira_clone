@@ -18,6 +18,7 @@ export const NavLeft = styled.aside`
   &:hover {
     width: 200px;
     box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.6);
+    transition-delay:1s;
   }
 `;
 
