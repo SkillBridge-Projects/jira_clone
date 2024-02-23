@@ -1,11 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 import { BadUserInputError, CustomError, catchErrors } from 'errors';
 import { Project, User, Comment, IProject } from 'mongooseEntities';
-import { signToken } from 'utils/authToken';
+import { signToken, verifyToken } from 'utils/authToken';
 import { sendMail } from 'utils/mailer';
 import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
-import { newAccountTemplate } from 'utils/mailTemplates';
+import { newAccountTemplate, resetPasswordTemplate } from 'utils/mailTemplates';
+import { FRONT_END_URLS } from 'utils/urls';
 
 const hashPassword = async (password: string, saltRounds: number): Promise<string> => {
   const hash = await bcrypt.hash(password, saltRounds);
@@ -171,3 +172,35 @@ export const editUser = catchErrors(async (req, res) => {
     user,
   });
 });
+
+export const forgetPassword = catchErrors( async (req,res) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new BadUserInputError({ email: 'Email not provided'});
+  }
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new BadUserInputError({ email: 'Email not found'})
+  }
+  const resetToken = signToken({ email: email}, undefined, 300)
+  const urlLink = process.env.FRONTEND_JIRA_BASE_URL + FRONT_END_URLS.forgetPassword + resetToken;
+  const mail = resetPasswordTemplate(user.name,urlLink);
+  try {
+    await sendMail(email, mail.subject, mail.body)
+    res.respond({ message: "Reset Password Mail is sent"})  
+  } catch (error){
+    res.respond({ message: error})
+  }
+})
+
+export const resetPassword = catchErrors( async (req, res) => {
+  const { password, token } = req.body;
+  try {
+    const { email } = verifyToken(token);
+    const hashedPassword = await hashPassword(password, 10)
+    await User.findOneAndUpdate({email: email}, {password: hashedPassword}, {new:true});
+    res.respond({ message: "Password reseted, Login with your new credentials"})
+  } catch (error) {
+    res.respond({ message: error})
+  }
+})
