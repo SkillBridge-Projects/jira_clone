@@ -60,7 +60,7 @@ const Authenticate = () => {
           type="password"
         />
         <Actions>
-          <ActionButton type="submit" variant="primary" isWorking={isLoggingIn}>
+          <ActionButton type="submit" variant="primary" data-testid="form-field:login-button" isWorking={isLoggingIn}>
             Login User
           </ActionButton>
         </Actions>

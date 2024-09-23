@@ -86,6 +86,7 @@ const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose, proje
           name="title"
           label="Short Summary"
           tip="Concisely summarize the issue in one or two sentences."
+          data-testid="Issue Create:short-summary"
         />
         <Form.Field.TextEditor
           name="description"
@@ -96,6 +97,7 @@ const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose, proje
         <Form.Field.Select
           name="reporterId"
           label="Reporter"
+          data-testid="IssueCreate:Reporter-search"
           options={userOptions(project)}
           renderOption={renderUser(project)}
           renderValue={renderUser(project)}
@@ -117,10 +119,10 @@ const ProjectIssueCreate = ({ project, fetchProject, onCreate, modalClose, proje
           renderValue={renderPriority}
         />
         <Actions>
-          <ActionButton type="submit" variant="primary" isWorking={isCreating}>
+          <ActionButton type="submit" variant="primary" data-testid="IssueCreate:create-issue-button" isWorking={isCreating}>
             Create Issue
           </ActionButton>
-          <ActionButton type="button" variant="empty" onClick={modalClose}>
+          <ActionButton type="button" variant="empty" data-testid="IssueCreate:cancel-button" onClick={modalClose}>
             Cancel
           </ActionButton>
         </Actions>

@@ -14,9 +14,7 @@ export const User = styled.div`
       border-radius: 4px;
       background: ${color.backgroundLight};
       transition: background 0.1s;
-      &:hover {
-        ${props.isNonEdit && 'cursor : not-allowed'}
-      }
+      ${props.isNonEdit && 'cursor : not-allowed'}
     `}
 `;
 
