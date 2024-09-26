@@ -12,14 +12,13 @@ import { NavLeft, LogoLink, StyledLogo, Item, ItemText } from './Styles';
 const propTypes = {
   project: PropTypes.object.isRequired,
   issueSearchModalOpen: PropTypes.func.isRequired,
-  issueCreateModalOpen: PropTypes.func.isRequired,
   userCreateModalOpen: PropTypes.func.isRequired,
   projectCreateModalOpen: PropTypes.func.isRequired,
 };
 
 const ProjectNavbarLeft = ({ 
   project, 
-  issueSearchModalOpen, 
+  issueSearchModalOpen,
   userCreateModalOpen,
   projectCreateModalOpen,
 }) => {
@@ -27,13 +26,13 @@ const ProjectNavbarLeft = ({
   const { currentUser } = useCurrentUser();
 
   return (
-    <NavLeft>
+    <NavLeft data-testid="Navbar:left">
     <LogoLink to="/">
       <StyledLogo color="#fff" />
     </LogoLink>
 
     {currentUser && currentUser.isAdmin && (
-      <Item onClick={projectCreateModalOpen}>
+      <Item data-testid="Navbar:create-project" onClick={projectCreateModalOpen}>
         <Icon type="plus" size={27} />
         <ItemText>Create Project</ItemText>
       </Item>
@@ -59,7 +58,7 @@ const ProjectNavbarLeft = ({
       history.push('/');
     }}>
       <Icon type="close" size={27} />
-      <ItemText>LogOut</ItemText>
+      <ItemText data-testid="Navbar:logout">LogOut</ItemText>
     </Item>
 
   </NavLeft>

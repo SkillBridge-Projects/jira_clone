@@ -58,7 +58,7 @@ const ProjectSidebar = ({ projects, setCurrentProject, currentProject }) => {
 
   return (
     <Sidebar isVisible={isSidebarVisible}>
-      <div style={{ marginTop: 10, marginBottom: 10 }}>
+      <div data-testid="sidebar:projects" style={{ marginTop: 10, marginBottom: 10 }}>
         {selectedProject && projects && projects.length > 0 && (
           <Select
             value={selectedProject}
@@ -79,7 +79,7 @@ const ProjectSidebar = ({ projects, setCurrentProject, currentProject }) => {
           />
         )}
       </div>
-      <Arrow
+      <Arrow data-testid="sidebar:collapse-button"
         onClick={() => {
           setIsSidebarVisible(prev => !prev);
         }}

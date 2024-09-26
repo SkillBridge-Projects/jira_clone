@@ -69,7 +69,7 @@ const UserEdit = ({ user, allProjects, fetchProject, onEdit, modalClose }) => {
         }
       }}
     >
-      <FormElement>
+      <FormElement data-testid="UserEdit:Form">
         <FormHeading>Edit User</FormHeading>
         <Divider />
         <Form.Field.Input name="name" label="Enter Name" placeholder="Enter Your Name" />
@@ -100,10 +100,10 @@ const UserEdit = ({ user, allProjects, fetchProject, onEdit, modalClose }) => {
           renderValue={renderOption}
         />
         <Actions>
-          <ActionButton type="submit" variant="primary" isWorking={isCreating}>
+          <ActionButton type="submit" variant="primary" data-testid="UserEdit:Edit User-button" isWorking={isCreating}>
             Edit User
           </ActionButton>
-          <ActionButton type="button" variant="empty" onClick={modalClose}>
+          <ActionButton type="button" variant="empty" data-testid="UserEdit:Cancel-button" onClick={modalClose}>
             Cancel
           </ActionButton>
         </Actions>

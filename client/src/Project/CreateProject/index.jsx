@@ -45,20 +45,21 @@ const ProjectCreate = ({ modalClose, onCreate }) => {
         <FormElement>
           <FormHeading>Create Project</FormHeading>
 
-          <Form.Field.Input name="name" label="Name" />
-          <Form.Field.Input name="url" label="URL" />
+          <Form.Field.Input name="name" label="Name" data-testid="create project:Name" />
+          <Form.Field.Input name="url" label="URL" data-testid="create project:URL"/>
           <Form.Field.TextEditor
             name="description"
             label="Description"
             tip="Describe the project in as much detail as you'd like."
+            data-testid="create project:Description"
           />
           <Form.Field.Select name="category" label="Project Category" options={categoryOptions} />
 
           <Actions>
-            <ActionButton type="submit" variant="primary" isWorking={isCreating} >
+            <ActionButton data-testid="create project:Create" type="submit" variant="primary" isWorking={isCreating} >
               Create
             </ActionButton>
-            <ActionButton type="submit" variant="empty" onClick={modalClose}>
+            <ActionButton data-testid="create project:Cancel" type="submit" variant="empty" onClick={modalClose}>
               Cancel
             </ActionButton>
           </Actions>
