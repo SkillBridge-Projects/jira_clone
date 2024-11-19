@@ -16,8 +16,8 @@ const propTypes = {
   projectCreateModalOpen: PropTypes.func.isRequired,
 };
 
-const ProjectNavbarLeft = ({ 
-  project, 
+const ProjectNavbarLeft = ({
+  project,
   issueSearchModalOpen,
   userCreateModalOpen,
   projectCreateModalOpen,
@@ -27,42 +27,43 @@ const ProjectNavbarLeft = ({
 
   return (
     <NavLeft data-testid="Navbar:left">
-    <LogoLink to="/">
-      <StyledLogo color="#fff" />
-    </LogoLink>
+      <LogoLink to="/">
+        <StyledLogo color="#fff" />
+      </LogoLink>
 
-    {currentUser && currentUser.isAdmin && (
-      <Item data-testid="Navbar:create-project" onClick={projectCreateModalOpen}>
-        <Icon type="plus" size={27} />
-        <ItemText>Create Project</ItemText>
+      {currentUser && currentUser.isAdmin && (
+        <Item data-testid="Navbar:create-project" onClick={projectCreateModalOpen}>
+          <Icon type="plus" size={27} />
+          <ItemText>Create Project</ItemText>
+        </Item>
+      )}
+
+      {project && (
+        <Item data-testid="Navbar:Search-Issues" onClick={issueSearchModalOpen}>
+          <Icon type="search" size={22} top={1} left={3} />
+          <ItemText>Search issues</ItemText>
+        </Item>
+      )}
+
+      {currentUser && currentUser.isAdmin && (
+        <Item onClick={userCreateModalOpen}>
+          <Icon type="plus" size={27} />
+          <ItemText>Create User</ItemText>
+        </Item>
+      )}
+
+      <Item
+        onClick={() => {
+          removeStoredAuthToken();
+          resetCache();
+          history.push('/');
+        }}
+      >
+        <Icon type="close" size={27} />
+        <ItemText data-testid="Navbar:logout">LogOut</ItemText>
       </Item>
-    )}
-
-    {project && (
-      <Item onClick={issueSearchModalOpen}>
-        <Icon type="search" size={22} top={1} left={3} />
-        <ItemText>Search issues</ItemText>
-      </Item>
-    )}
-
-    {currentUser && currentUser.isAdmin && (
-      <Item onClick={userCreateModalOpen}>
-        <Icon type="plus" size={27} />
-        <ItemText>Create User</ItemText>
-      </Item>
-    )}
-
-    <Item onClick={() => {
-      removeStoredAuthToken();
-      resetCache();
-      history.push('/');
-    }}>
-      <Icon type="close" size={27} />
-      <ItemText data-testid="Navbar:logout">LogOut</ItemText>
-    </Item>
-
-  </NavLeft>
-  )
+    </NavLeft>
+  );
 };
 
 ProjectNavbarLeft.propTypes = propTypes;
