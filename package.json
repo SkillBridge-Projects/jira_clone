@@ -10,6 +10,9 @@
     "start:production": "cd api && npm run start:production && cd ../client && npm run start:production"
   },
   "devDependencies": {
+    "@types/babel__traverse": "^7.20.6",
+    "@types/mdast": "^4.0.4",
+    "@types/object.omit": "^3.0.3",
     "husky": "^4.0.0-beta.5"
   },
   "husky": {
